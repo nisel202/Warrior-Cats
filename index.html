@@ -1,0 +1,1599 @@
+<!DOCTYPE html>
+<html lang="de" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Warrior Cats – Das große Buch-Archiv</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Cinzel für mystische Überschriften & Inter für optimale Lesbarkeit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* ==========================================================================
+           1. CLAN-FARBTHEMEN & DESIGN-VARIABLEN
+           ========================================================================== */
+        :root {
+            --bg-forest: #060a08;
+            --bg-card: rgba(14, 22, 18, 0.78);
+            --bg-card-hover: rgba(20, 31, 25, 0.9);
+            --border-subtle: rgba(255, 255, 255, 0.09);
+            --text-primary: #f4f6f5;
+            --text-secondary: #a3b3ab;
+
+            /* Standard: DonnerClan (Warmes Feuer-Bernstein & Kupfer) */
+            --clan-primary: #f59e0b;
+            --clan-secondary: #ea580c;
+            --clan-glow: rgba(245, 158, 11, 0.25);
+            --clan-rgb: 245, 158, 11;
+        }
+
+        /* FlussClan (Tiefes Fluss-Blau & Türkis) */
+        [data-clan="flussclan"] {
+            --bg-forest: #05090e;
+            --bg-card: rgba(12, 22, 34, 0.78);
+            --bg-card-hover: rgba(17, 30, 46, 0.9);
+            --clan-primary: #38bdf8;
+            --clan-secondary: #0284c7;
+            --clan-glow: rgba(56, 189, 248, 0.25);
+            --clan-rgb: 56, 189, 248;
+        }
+
+        /* SchattenClan (Mystisches Kiefern-Smaragd) */
+        [data-clan="schattenclan"] {
+            --bg-forest: #050b08;
+            --bg-card: rgba(11, 24, 19, 0.78);
+            --bg-card-hover: rgba(16, 34, 27, 0.9);
+            --clan-primary: #10b981;
+            --clan-secondary: #059669;
+            --clan-glow: rgba(16, 185, 129, 0.25);
+            --clan-rgb: 16, 185, 129;
+        }
+
+        /* WindClan (Heide-Gold & Sand) */
+        [data-clan="windclan"] {
+            --bg-forest: #0a0905;
+            --bg-card: rgba(24, 21, 13, 0.78);
+            --bg-card-hover: rgba(34, 30, 18, 0.9);
+            --clan-primary: #eab308;
+            --clan-secondary: #ca8a04;
+            --clan-glow: rgba(234, 179, 8, 0.25);
+            --clan-rgb: 234, 179, 8;
+        }
+
+        /* SternenClan (Silberpelz & Kosmisches Violett) */
+        [data-clan="sternenclan"] {
+            --bg-forest: #08070f;
+            --bg-card: rgba(19, 17, 34, 0.78);
+            --bg-card-hover: rgba(27, 24, 48, 0.9);
+            --clan-primary: #c084fc;
+            --clan-secondary: #818cf8;
+            --clan-glow: rgba(192, 132, 252, 0.28);
+            --clan-rgb: 192, 132, 252;
+        }
+
+        /* ==========================================================================
+           2. BASIS-STYLES & WALD-ATMOSPHÄRE
+           ========================================================================== */
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-forest);
+            color: var(--text-primary);
+            margin: 0;
+            overflow-x: hidden;
+            transition: background-color 0.45s ease;
+        }
+
+        .font-mystic {
+            font-family: 'Cinzel', Georgia, serif;
+        }
+
+        /* Mystischer Nebel- & Mondschein-Hintergrund */
+        .forest-backdrop {
+            background:
+                radial-gradient(ellipse 75% 45% at 50% -5%, rgba(var(--clan-rgb), 0.16), transparent 70%),
+                radial-gradient(circle at 15% 85%, rgba(var(--clan-rgb), 0.08), transparent 55%),
+                radial-gradient(circle at 85% 60%, rgba(148, 163, 184, 0.06), transparent 50%);
+        }
+
+        .clan-gradient-text {
+            background: linear-gradient(135deg, var(--clan-primary), #f8fafc 65%, var(--clan-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .clan-accent-bg {
+            background: linear-gradient(135deg, var(--clan-primary), var(--clan-secondary));
+        }
+
+        .clan-btn-primary {
+            background: linear-gradient(135deg, var(--clan-primary), var(--clan-secondary));
+            color: #070908;
+            font-weight: 700;
+            box-shadow: 0 6px 20px -4px var(--clan-glow);
+            transition: transform 0.2s ease, filter 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .clan-btn-primary:hover {
+            transform: translateY(-1px);
+            filter: brightness(1.08);
+            box-shadow: 0 10px 26px -4px var(--clan-glow);
+        }
+
+        .glass-panel {
+            background: var(--bg-card);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid var(--border-subtle);
+            transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.25s ease, box-shadow 0.3s ease;
+        }
+
+        .book-card:hover {
+            background: var(--bg-card-hover);
+            border-color: rgba(var(--clan-rgb), 0.45);
+            transform: translateY(-3px);
+            box-shadow: 0 18px 36px -14px rgba(0, 0, 0, 0.7), 0 0 22px -6px var(--clan-glow);
+        }
+
+        .tab-active {
+            background: rgba(var(--clan-rgb), 0.18) !important;
+            border-color: var(--clan-primary) !important;
+            color: #ffffff !important;
+            box-shadow: 0 0 16px -4px var(--clan-glow);
+        }
+
+        /* ==========================================================================
+           3. SPOILER-SCHUTZ & SCROLLBARS
+           ========================================================================== */
+        .spoiler-blurred {
+            filter: blur(5.5px);
+            user-select: none;
+            opacity: 0.65;
+            transition: filter 0.35s ease, opacity 0.35s ease;
+        }
+
+        .spoiler-revealed {
+            filter: blur(0);
+            user-select: auto;
+            opacity: 1;
+        }
+
+        /* Horizontale Scrollbar für Staffel-Tabs auf Mobilgeräten */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col">
+
+    <!-- SternenClan-Partikel-Canvas im Hintergrund -->
+    <canvas id="starclan-canvas" class="fixed inset-0 pointer-events-none z-0" aria-hidden="true"></canvas>
+    <div class="fixed inset-0 forest-backdrop pointer-events-none z-0" aria-hidden="true"></div>
+
+    <!-- ==========================================================================
+         KOPFZEILE (Navigation, Clan-Themen, Spoiler-Schutz & HTML-Download)
+         ========================================================================== -->
+    <header class="sticky top-0 z-40 border-b border-white/10 bg-black/75 backdrop-blur-xl">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3.5 flex flex-wrap items-center justify-between gap-3">
+            
+            <!-- Titel & Emblem -->
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-2xl clan-accent-bg flex items-center justify-center text-slate-950 shadow-lg shrink-0">
+                    <!-- Katzen- & Mond-Emblem (Inline SVG) -->
+                    <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 3c-1.5 0-2.9.4-4.1 1.1L5 2.5 5.6 6C4.6 7.4 4 9.1 4 11c0 4.4 3.6 8 8 8s8-3.6 8-8c0-1.9-.6-3.6-1.6-5L19 2.5l-2.9 1.6C14.9 3.4 13.5 3 12 3zm-3 8.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3zm6 0a1.5 1.5 0 110 3 1.5 1.5 0 010-3zm-3 3.5l1.5 1.5h-3L12 15z"/>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="font-mystic text-lg sm:text-xl font-bold tracking-wide text-white leading-tight">
+                        Warrior Cats
+                    </h1>
+                    <p class="text-[11px] sm:text-xs text-slate-400">Das große Buch-Archiv</p>
+                </div>
+            </div>
+
+            <!-- Rechte Steuerleiste: Clan-Auswahl, Spoiler-Schutz & Download -->
+            <div class="flex items-center gap-2 sm:gap-3 flex-wrap">
+                
+                <!-- Clan-Farbthemen Umschalter -->
+                <div class="flex items-center gap-1.5 bg-white/5 border border-white/10 px-2.5 py-1.5 rounded-full" title="Clan-Farbthema wählen">
+                    <span class="hidden lg:inline text-[11px] text-slate-400 mr-1">Clan:</span>
+                    <button type="button" onclick="setClanTheme('donnerclan')" data-clan-btn="donnerclan" title="DonnerClan (Bernstein)"
+                        class="clan-dot w-4 h-4 rounded-full bg-amber-500 ring-2 ring-white scale-110 transition-transform cursor-pointer"></button>
+                    <button type="button" onclick="setClanTheme('flussclan')" data-clan-btn="flussclan" title="FlussClan (Blau)"
+                        class="clan-dot w-4 h-4 rounded-full bg-sky-400 opacity-65 hover:opacity-100 transition-transform cursor-pointer"></button>
+                    <button type="button" onclick="setClanTheme('schattenclan')" data-clan-btn="schattenclan" title="SchattenClan (Smaragd)"
+                        class="clan-dot w-4 h-4 rounded-full bg-emerald-500 opacity-65 hover:opacity-100 transition-transform cursor-pointer"></button>
+                    <button type="button" onclick="setClanTheme('windclan')" data-clan-btn="windclan" title="WindClan (Gold)"
+                        class="clan-dot w-4 h-4 rounded-full bg-yellow-400 opacity-65 hover:opacity-100 transition-transform cursor-pointer"></button>
+                    <button type="button" onclick="setClanTheme('sternenclan')" data-clan-btn="sternenclan" title="SternenClan (Silber & Violett)"
+                        class="clan-dot w-4 h-4 rounded-full bg-purple-400 opacity-65 hover:opacity-100 transition-transform cursor-pointer"></button>
+                </div>
+
+                <!-- Spoiler-Schutz Toggle -->
+                <button type="button" id="spoiler-toggle-btn" onclick="toggleSpoilerMode()"
+                    class="px-3 py-1.5 rounded-xl text-xs font-medium bg-white/5 hover:bg-white/10 border border-white/10 text-slate-200 flex items-center gap-1.5 transition-all cursor-pointer"
+                    title="Zusammenfassungen zum Schutz vor Spoilern unscharf stellen">
+                    <span id="spoiler-icon">👁️</span>
+                    <span id="spoiler-label">Spoiler-Schutz: Aus</span>
+                </button>
+
+                <!-- HTML-Download Button -->
+                <button type="button" onclick="downloadArchiveHtml()"
+                    class="clan-btn-primary px-3.5 py-1.5 rounded-xl text-xs sm:text-sm flex items-center gap-1.5 cursor-pointer">
+                    <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V3"/>
+                    </svg>
+                    <span>Als index.html herunterladen</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Toast-Benachrichtigung -->
+    <div id="toast" class="fixed bottom-5 right-5 z-50 translate-y-24 opacity-0 transition-all duration-300 pointer-events-none">
+        <div class="glass-panel px-4 py-3 rounded-2xl flex items-center gap-3 shadow-2xl border border-white/15">
+            <span class="w-2.5 h-2.5 rounded-full clan-accent-bg"></span>
+            <p id="toast-text" class="text-sm font-medium text-white"></p>
+        </div>
+    </div>
+
+    <main class="relative z-10 flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-8 sm:py-10 space-y-8">
+
+        <!-- ==========================================================================
+             HERO & LESE-FORTSCHRITTSTRACKER
+             ========================================================================== -->
+        <section class="glass-panel rounded-3xl p-6 sm:p-8 relative overflow-hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+                <div class="lg:col-span-8 space-y-3">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs text-slate-300">
+                        <span>✨ Alle 8 Hauptstaffeln (48 Bände) + 8 Special Adventures</span>
+                    </div>
+                    <h2 class="font-mystic text-2xl sm:text-4xl font-bold leading-tight">
+                        Die Chroniken der <span class="clan-gradient-text">vier Krieger-Clans</span>
+                    </h2>
+                    <p class="text-sm sm:text-base text-slate-300 max-w-3xl leading-relaxed">
+                        Entdecke ausführliche Zusammenfassungen (je 6–8 Sätze) zu jedem Hauptband und den wichtigsten Special Adventures. Durchsuche die Geschichte nach deinen Lieblingskatzen, schütze dich optional vor Spoilern und verfolge deinen persönlichen Lesefortschritt.
+                    </p>
+                </div>
+
+                <!-- Fortschritts-Karte -->
+                <div class="lg:col-span-4 bg-black/40 border border-white/10 rounded-2xl p-5 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Dein Lesefortschritt</span>
+                        <span id="progress-percent" class="text-xs font-bold px-2 py-0.5 rounded-md bg-white/10 text-white">0%</span>
+                    </div>
+                    <div class="flex items-baseline justify-between">
+                        <div class="text-2xl sm:text-3xl font-extrabold text-white">
+                            <span id="read-count">0</span> <span class="text-base font-normal text-slate-400">/ <span id="total-count">56</span> Bücher</span>
+                        </div>
+                        <button type="button" onclick="resetProgress()" class="text-[11px] text-slate-400 hover:text-rose-400 underline cursor-pointer">
+                            Zurücksetzen
+                        </button>
+                    </div>
+                    <div class="w-full h-2.5 bg-white/10 rounded-full overflow-hidden">
+                        <div id="progress-bar" class="h-full clan-accent-bg rounded-full transition-all duration-500" style="width: 0%"></div>
+                    </div>
+                    <p class="text-[11px] text-slate-400">
+                        Wird automatisch in deinem Browser gespeichert.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================================================
+             SUCHLEISTE & FILTER-STEUERUNG
+             ========================================================================== -->
+        <section class="space-y-4">
+            <div class="flex flex-col md:flex-row gap-3">
+                <!-- Suchfeld -->
+                <div class="relative flex-1">
+                    <svg class="w-5 h-5 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z"/>
+                    </svg>
+                    <input type="text" id="search-input" placeholder="Suche nach Buchtitel, Staffel, Katzenname (z. B. Feuerstern, Häherfeder, Wurzelquell) oder Stichwort..."
+                        class="w-full pl-12 pr-10 py-3.5 rounded-2xl glass-panel text-sm sm:text-base text-white placeholder-slate-400 focus:outline-none focus:border-white/30">
+                    <button type="button" id="clear-search-btn" onclick="clearSearch()"
+                        class="hidden absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white text-sm px-2 py-1 cursor-pointer">
+                        ✕
+                    </button>
+                </div>
+
+                <!-- Lesestatus-Filter -->
+                <div class="flex items-center gap-1.5 bg-black/40 border border-white/10 p-1.5 rounded-2xl shrink-0">
+                    <button type="button" onclick="setReadFilter('all')" data-read-filter="all"
+                        class="read-filter-btn tab-active px-3.5 py-2 rounded-xl text-xs sm:text-sm font-medium border border-transparent text-slate-300 transition-all cursor-pointer">
+                        Alle Bücher
+                    </button>
+                    <button type="button" onclick="setReadFilter('unread')" data-read-filter="unread"
+                        class="read-filter-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-medium border border-transparent text-slate-300 hover:text-white transition-all cursor-pointer">
+                        Ungelesen
+                    </button>
+                    <button type="button" onclick="setReadFilter('read')" data-read-filter="read"
+                        class="read-filter-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-medium border border-transparent text-slate-300 hover:text-white transition-all cursor-pointer">
+                        Gelesen ✓
+                    </button>
+                </div>
+            </div>
+
+            <!-- Staffel-Filter-Tabs (Horizontal scrollbar auf Mobile) -->
+            <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1" id="season-tabs">
+                <button type="button" onclick="setSeasonFilter('all')" data-season="all"
+                    class="season-tab tab-active shrink-0 px-4 py-2 rounded-xl text-xs sm:text-sm font-medium glass-panel text-slate-200 cursor-pointer">
+                    Alle (56)
+                </button>
+                <button type="button" onclick="setSeasonFilter('staffel-1')" data-season="staffel-1"
+                    class="season-tab shrink-0 px-4 py-2 rounded-xl text-xs sm:text-sm font-medium glass-panel text-slate-300 hover:text-white cursor-pointer">
+                    Staffel 1: Die Prophezeiungen beginnen
+                </button>
+                <button type="button" onclick="setSeasonFilter('staffel-2')" data-season="staffel-2"
+                    class="season-tab shrink-0 px-4 py-2 rounded-xl text-xs sm:text-sm font-medium glass-panel text-slate-300 hover:text-white cursor-pointer">
+                    Staffel 2: Die neue Prophezeiung
+                </button>
+                <button type="button" onclick="setSeasonFilter('staffel-3')" data-season="staffel-3"
+                    class="season-tab shrink-0 px-4 py-2 rounded-xl text-xs sm:text-sm font-medium glass-panel text-slate-300 hover:text-white cursor-pointer">
+                    Staffel 3: Die Macht der Drei
+                </button>
+                <button type="button" onclick="setSeasonFilter('staffel-4')" data-season="staffel-4"
+                    class="season-tab shrink-0 px-4 py-2 rounded-xl text-xs sm:text-sm font-medium glass-panel text-slate-300 hover:text-white cursor-pointer">
+                    Staffel 4: Zeichen der Sterne
+                </button>
+                <button type="button" onclick="setSeasonFilter('staffel-5')" data-season="staffel-5"
+                    class="season-tab shrink-0 px-4 py-2 rounded-xl text-xs sm:text-sm font-medium glass-panel text-slate-300 hover:text-white cursor-pointer">
+                    Staffel 5: Der Beginn der Clans
+                </button>
+                <button type="button" onclick="setSeasonFilter('staffel-6')" data-season="staffel-6"
+                    class="season-tab shrink-0 px-4 py-2 rounded-xl text-xs sm:text-sm font-medium glass-panel text-slate-300 hover:text-white cursor-pointer">
+                    Staffel 6: Vision von Schatten
+                </button>
+                <button type="button" onclick="setSeasonFilter('staffel-7')" data-season="staffel-7"
+                    class="season-tab shrink-0 px-4 py-2 rounded-xl text-xs sm:text-sm font-medium glass-panel text-slate-300 hover:text-white cursor-pointer">
+                    Staffel 7: Das gebrochene Gesetz
+                </button>
+                <button type="button" onclick="setSeasonFilter('staffel-8')" data-season="staffel-8"
+                    class="season-tab shrink-0 px-4 py-2 rounded-xl text-xs sm:text-sm font-medium glass-panel text-slate-300 hover:text-white cursor-pointer">
+                    Staffel 8: Ein sternenloser Clan
+                </button>
+                <button type="button" onclick="setSeasonFilter('special')" data-season="special"
+                    class="season-tab shrink-0 px-4 py-2 rounded-xl text-xs sm:text-sm font-medium glass-panel text-slate-300 hover:text-white cursor-pointer">
+                    ★ Special Adventures (8)
+                </button>
+            </div>
+        </section>
+
+        <!-- Treffer-Anzeige -->
+        <div class="flex items-center justify-between text-xs sm:text-sm text-slate-400">
+            <span id="results-counter">Zeige 56 von 56 Büchern</span>
+            <span id="active-filter-hint" class="hidden sm:inline text-slate-500">Klicke auf eine Karte für die Detail-Ansicht</span>
+        </div>
+
+        <!-- ==========================================================================
+             BÜCHER-GRID (Wird dynamisch aus der Datenbank gerendert)
+             ========================================================================== -->
+        <section id="books-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+            <!-- Karten werden per JavaScript eingefügt -->
+        </section>
+
+        <!-- Leer-Zustand bei 0 Suchtreffern -->
+        <div id="empty-state" class="hidden glass-panel rounded-3xl p-12 text-center space-y-4">
+            <div class="text-4xl">🐾</div>
+            <h3 class="font-mystic text-xl font-bold text-white">Keine Spuren im Wald gefunden</h3>
+            <p class="text-sm text-slate-400 max-w-md mx-auto">
+                Für deine aktuelle Suche oder Filterauswahl wurden keine Bücher gefunden. Versuche einen anderen Suchbegriff oder setze die Filter zurück.
+            </p>
+            <button type="button" onclick="resetAllFilters()" class="clan-btn-primary px-5 py-2.5 rounded-xl text-sm cursor-pointer">
+                Alle Filter zurücksetzen
+            </button>
+        </div>
+
+    </main>
+
+    <!-- ==========================================================================
+         DETAIL-MODAL FÜR EINZELNES BUCH
+         ========================================================================== -->
+    <div id="book-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+        <div class="glass-panel max-w-2xl w-full max-h-[90vh] overflow-y-auto rounded-3xl p-6 sm:p-8 relative shadow-2xl border border-white/15">
+            
+            <!-- Schliessen-Button -->
+            <button type="button" onclick="closeBookModal()" aria-label="Schliessen"
+                class="absolute top-5 right-5 w-9 h-9 rounded-xl bg-white/10 hover:bg-white/20 flex items-center justify-center text-white cursor-pointer">
+                ✕
+            </button>
+
+            <!-- Staffel & Band-Metadaten -->
+            <div class="flex flex-wrap items-center gap-2 pr-10">
+                <span id="modal-season-badge" class="text-xs font-semibold px-3 py-1 rounded-full bg-white/10 text-white">Staffel</span>
+                <span id="modal-volume-badge" class="text-xs font-medium px-3 py-1 rounded-full bg-white/5 text-slate-300">Band</span>
+                <span id="modal-release-badge" class="text-xs font-medium px-3 py-1 rounded-full bg-white/5 text-slate-400">Erschienen</span>
+            </div>
+
+            <!-- Buchtitel -->
+            <h2 id="modal-title" class="font-mystic text-2xl sm:text-3xl font-bold text-white mt-4">Buchtitel</h2>
+
+            <!-- Hauptfiguren -->
+            <div class="mt-4">
+                <div class="text-xs uppercase tracking-wider text-slate-400 mb-1.5">Wichtige Katzen &amp; Perspektiven</div>
+                <div id="modal-characters" class="flex flex-wrap gap-1.5"></div>
+            </div>
+
+            <!-- Ausführliche Zusammenfassung -->
+            <div class="mt-6 bg-black/40 border border-white/10 rounded-2xl p-5 relative">
+                <div class="flex items-center justify-between mb-2.5">
+                    <span class="text-xs font-semibold uppercase tracking-wider clan-gradient-text">Zusammenfassung</span>
+                    <button type="button" id="modal-reveal-btn" onclick="revealModalSpoiler()"
+                        class="hidden text-xs px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-white cursor-pointer">
+                        Spoiler aufdecken
+                    </button>
+                </div>
+                <p id="modal-summary" class="text-sm sm:text-base text-slate-200 leading-relaxed">
+                    Zusammenfassungstext...
+                </p>
+            </div>
+
+            <!-- Aktionsleiste unten: Gelesen-Status & Vor/Zurück-Navigation -->
+            <div class="mt-6 pt-5 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3">
+                <button type="button" id="modal-read-toggle" onclick="toggleCurrentModalRead()"
+                    class="w-full sm:w-auto px-5 py-2.5 rounded-xl text-sm font-semibold border transition-all flex items-center justify-center gap-2 cursor-pointer">
+                    Als gelesen markieren
+                </button>
+
+                <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+                    <button type="button" id="modal-prev-btn" onclick="navigateModal(-1)"
+                        class="flex-1 sm:flex-initial px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs sm:text-sm text-slate-200 disabled:opacity-35 cursor-pointer">
+                        ← Vorheriges
+                    </button>
+                    <button type="button" id="modal-next-btn" onclick="navigateModal(1)"
+                        class="flex-1 sm:flex-initial px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs sm:text-sm text-slate-200 disabled:opacity-35 cursor-pointer">
+                        Nächstes →
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================================================
+         FOOTER
+         ========================================================================== -->
+    <footer class="relative z-10 border-t border-white/10 py-8 px-4 sm:px-6 mt-12">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs sm:text-sm text-slate-400">
+            <div>
+                <span class="font-mystic font-bold text-white">Warrior Cats – Das große Buch-Archiv</span>
+                <span class="ml-2">• Fan-Archiv für alle 8 Staffeln &amp; Special Adventures</span>
+            </div>
+            <div class="flex items-center gap-4">
+                <a href="#" class="hover:text-white transition-colors">Nach oben ↑</a>
+                <button type="button" onclick="downloadArchiveHtml()" class="clan-gradient-text font-semibold hover:underline cursor-pointer">
+                    index.html speichern
+                </button>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ==========================================================================
+         VOLLSTÄNDIGE BUCH-DATENBANK & INTERAKTIVE LOGIK
+         ========================================================================== -->
+    <script>
+        /* --------------------------------------------------------------------------
+           1. DATENBANK: ALLE 48 HAUPTBÄNDE (STAFFEL 1–8) + 8 SPECIAL ADVENTURES
+           -------------------------------------------------------------------------- */
+        const booksDatabase = [
+            // ======================== STAFFEL 1: DIE PROPHEZEIUNGEN BEGINNEN ========================
+            {
+                id: "s1-b1",
+                seasonId: "staffel-1",
+                seasonName: "Staffel 1: Die Prophezeiungen beginnen",
+                volume: "Band 1",
+                releaseOrder: "Erscheinungsjahr 2003 (DE: 2008)",
+                title: "In die Wildnis",
+                characters: ["Feuerpfote (Sammy)", "Graupfote", "Rabenpfote", "Blaustern", "Tigerkralle", "Gelbzahn"],
+                summary: "Der junge Hauskater Sammy sehnt sich nach der Freiheit des Waldes und folgt schließlich der Einladung der DonnerClan-Anführerin Blaustern. Unter seinem neuen Schülernamen Feuerpfote muss er sich den Respekt der wildgeborenen Katzen erst hart erarbeiten, da viele ihm wegen seiner Herkunft misstrauen. Gemeinsam mit seinen neuen Freunden Graupfote und Rabenpfote erlernt er das Jagen, Kämpfen und das Gesetz der Krieger. Schon bald bemerkt er, dass im Wald dunkle Spannungen herrschen, denn der tyrannische SchattenClan unter Braunstern bedroht alle anderen Clans. Zudem beobachtet der verängstigte Rabenpfote, wie der mächtige Zweite Anführer Tigerkralle den vorherigen Stellvertreter Rotschweif heimtückisch ermordet. Als Braunstern Junge aus dem DonnerClan entführen lässt, führt Feuerpfote mit Hilfe der ausgestoßenen Heilerin Gelbzahn eine mutige Rettungsmission an. Am Ende gelingt es ihnen, den SchattenClan zu vertreiben, und Feuerpfote wird für seine Tapferkeit zum vollwertigen Krieger Feuerherz ernannt."
+            },
+            {
+                id: "s1-b2",
+                seasonId: "staffel-1",
+                seasonName: "Staffel 1: Die Prophezeiungen beginnen",
+                volume: "Band 2",
+                releaseOrder: "Erscheinungsjahr 2003 (DE: 2008)",
+                title: "Feuer und Eis",
+                characters: ["Feuerherz", "Graustreif", "Silberfluss", "Tigerkralle", "Rußpfote", "Wolkenjunges"],
+                summary: "Als frisch ernannte Krieger erhalten Feuerherz und Graustreif ihren ersten großen Auftrag von Blaustern: Sie sollen den vom SchattenClan vertriebenen WindClan aufspüren und in sein Territorium zurückbringen. Auf dem Rückweg geraten sie in ein Gefecht mit dem FlussClan, bei dem Feuerherz ausgerechnet von Tigerkralle beobachtet wird, der insgeheim auf seinen Tod hofft. Während Feuerherz versucht, Blaustern vor Tigerkralles Verrat zu warnen, verliert er durch mangelnde Beweise das Vertrauen seiner Anführerin. Gleichzeitig verliebt sich Graustreif unsterblich in die FlussClan-Kriegerin Silberfluss und vernachlässigt für heimliche Treffen seine Pflichten und seinen Schüler. Feuerherz kümmert sich derweil hingebungsvoll um seine eigene Schülerin Rußpfote, die jedoch bei einer von Tigerkralle gestellten Falle am Donnerweg schwer verletzt wird. Zudem nimmt Feuerherz seinen jungen Hauskätzchen-Neffen Wolkenjunges im Clan auf, was für weiteren Unmut unter den Kriegern sorgt. Als der FlussClan gemeinsam mit dem SchattenClan den WindClan angreift, eilt der DonnerClan zur Hilfe und schlägt die Angreifer zurück."
+            },
+            {
+                id: "s1-b3",
+                seasonId: "staffel-1",
+                seasonName: "Staffel 1: Die Prophezeiungen beginnen",
+                volume: "Band 3",
+                releaseOrder: "Erscheinungsjahr 2003 (DE: 2009)",
+                title: "Geheimnis des Waldes",
+                characters: ["Feuerherz", "Graustreif", "Tigerkralle", "Blaustern", "Silberfluss", "Rußpfote"],
+                summary: "Feuerherz will endlich die Wahrheit über Rotschweifs Tod ans Licht bringen und macht sich heimlich auf die Suche nach seinem verschwundenen Freund Rabenpfote. Rabenpfote bestätigt ihm endgültig, dass Tigerkralle Rotschweif nach der Schlacht an den Sonnenfelsen getötet hat, um selbst Zweiter Anführer zu werden. Während der Blattgrüne sucht eine verheerende Überschwemmung den FlussClan heim, und Feuerherz sowie Graustreif helfen heimlich dabei, die hungernden FlussClan-Katzen mit Beute zu versorgen. Kurz darauf bringt Silberfluss am Flussufer Graustreifs Junge zur Welt, stirbt jedoch tragischerweise an den Folgen der Geburt. Rußpfote versucht verzweifelt, die FlussClan-Königin zu retten, und entdeckt dabei ihre wahre Bestimmung als zukünftige Heilerin des DonnerClans. Als Tigerkralle schließlich mit einer Bande ausgestoßener Streuner das Lager überfällt, um Blaustern zu ermorden, rettet Feuerherz ihr in letzter Sekunde das Leben. Tigerkralle wird aus dem Clan verbannt, Blaustern ernennt Feuerherz zu ihrem neuen Zweiten Anführer, und Graustreif wechselt schweren Herzens in den FlussClan, um bei seinen Jungen zu bleiben."
+            },
+            {
+                id: "s1-b4",
+                seasonId: "staffel-1",
+                seasonName: "Staffel 1: Die Prophezeiungen beginnen",
+                volume: "Band 4",
+                releaseOrder: "Erscheinungsjahr 2004 (DE: 2009)",
+                title: "Vor dem Sturm",
+                characters: ["Feuerherz", "Blaustern", "Wolkenpfote", "Gelbzahn", "Tigerkralle", "Sandsturm"],
+                summary: "In seiner neuen Rolle als Zweiter Anführer muss Feuerherz fast die gesamte Verantwortung für den DonnerClan übernehmen, da Blaustern nach Tigerkralles Verrat in tiefes Misstrauen verfällt. Die Anführerin glaubt, der SternenClan habe sie verlassen, und sieht in fast jedem eigenen Krieger einen möglichen Verräter. Gleichzeitig bereitet sein junger Schüler Wolkenpfote ihm große Sorgen, weil er heimlich Futter von Zweibeinern annimmt und schließlich sogar von ihnen entführt wird. Gemeinsam mit Sandsturm, die immer engere Gefühle für ihn entwickelt, bricht Feuerherz ins Zweibeiner-Territorium auf und befreit Wolkenpfote aus einem Haus. Im Wald bricht unterdessen eine schreckliche Dürre aus, die in einem verheerenden Waldbrand gipfelt und den DonnerClan aus seinem Lager vertreibt. Feuerherz führt seinen Clan sicher über den Fluss in das Territorium des FlussClans, kehrt aber noch einmal ins brennende Lager zurück, um Nachzügler zu retten. Dabei kommt die treue Heilerin Gelbzahn im Rauch ums Leben, nachdem sie Feuerherz noch ein letztes Geheimnis anvertraut hat."
+            },
+            {
+                id: "s1-b5",
+                seasonId: "staffel-1",
+                seasonName: "Staffel 1: Die Prophezeiungen beginnen",
+                volume: "Band 5",
+                releaseOrder: "Erscheinungsjahr 2004 (DE: 2009)",
+                title: "Gefährliche Spuren",
+                characters: ["Feuerherz", "Blaustern", "Tigerstern", "Wieselpfote", "Lichtpfote", "Graustreif"],
+                summary: "Die düsterste Befürchtung des DonnerClans wird wahr, als Tigerkralle auf der Großen Versammlung als neuer Anführer Tigerstern des geschwächten SchattenClans auftritt. Blaustern verliert daraufhin endgültig den Verstand, erklärt allen anderen Clans den Krieg und weigert sich, junge Schüler zu Kriegern zu ernennen. Aus Frust über diese Ungerechtigkeit ziehen die beiden älteren Schüler Wieselpfote und Lichtpfote auf eigene Faust los, um eine geheimnisvolle Gefahr bei den Schlangenfelsen zu bekämpfen. Dort werden sie von einer blutrünstigen Hundemeute angegriffen, wobei Wieselpfote stirbt und Lichtpfote schwer entstellt überlebt. Feuerherz erkennt, dass Tigerstern die Hunde absichtlich mit Beute durch den Wald lockt, um den gesamten DonnerClan auszulöschen. Mit einem waghalsigen Plan lockt Feuerherz die Meute stattdessen zur Schlucht, doch Tigerstern stellt sich ihm dort in den Weg. Im letzten Moment opfert sich Blaustern, stürzt sich mit dem Leit-Hund in den reißenden Fluss und versöhnt sich sterbend mit ihren eigenen Kindern und dem SternenClan."
+            },
+            {
+                id: "s1-b6",
+                seasonId: "staffel-1",
+                seasonName: "Staffel 1: Die Prophezeiungen beginnen",
+                volume: "Band 6",
+                releaseOrder: "Erscheinungsjahr 2004 (DE: 2010)",
+                title: "Stunde der Finsternis",
+                characters: ["Feuerstern", "Tigerstern", "Geißel", "Graustreif", "Sandsturm", "Brombeerpfote"],
+                summary: "Nach Blausterns Tod reist Feuerherz zum Mondstein, empfängt vom SternenClan seine neun Leben und wird zum neuen Anführer Feuerstern ernannt. Doch Tigerstern hat bereits seinen nächsten Schachzug geplant und vereint den SchattenClan und den FlussClan zum sogenannten TigerClan. Als der WindClan und der DonnerClan sich weigern, diesem Bündnis beizutreten, holt Tigerstern den grausamen BlutClan aus dem Zweibeinerort unter der Führung von Geißel in den Wald. Auf der Großen Versammlung weigert sich Geißel jedoch, Befehle von Tigerstern entgegenzunehmen, und tötet ihn mit einem einzigen Schlag seiner hundezahnverstärkten Krallen, wodurch Tigerstern alle neun Leben auf einmal verliert. Nun fordert Geißel den gesamten Wald für den BlutClan ein und gibt den vier Clans nur wenige Tage Zeit zum Verschwinden. Feuerstern schmiedet daraufhin den beispiellosen LöwenClan aus allen vier verfeindeten Wald-Clans, um gemeinsam für ihre Heimat zu kämpfen. In der finalen Schlacht verliert Feuerstern sein erstes Leben an Geißel, erhebt sich aber wieder und besiegt den Anführer des BlutClans endgültig."
+            },
+
+            // ======================== STAFFEL 2: DIE NEUE PROPHEZEIUNG ========================
+            {
+                id: "s2-b1",
+                seasonId: "staffel-2",
+                seasonName: "Staffel 2: Die neue Prophezeiung",
+                volume: "Band 1",
+                releaseOrder: "Erscheinungsjahr 2005 (DE: 2010)",
+                title: "Mitternacht",
+                characters: ["Brombeerkralle", "Eichhornpfote", "Krähenpfote", "Federschweif", "Sturmpelz", "Bernsteinpelz"],
+                summary: "Viele Monde nach dem Sieg über den BlutClan herrscht Frieden im Wald, bis der SternenClan vier auserwählten Katzen aus den vier Clans geheimnisvolle Träume schickt. Brombeerkralle vom DonnerClan, Krähenpfote vom WindClan, Federschweif vom FlussClan und Bernsteinpelz vom SchattenClan sollen gemeinsam zum Ort der ertrinkenden Sonne reisen, um auf die Stimme von Mitternacht zu hören. Ohne Einwilligung ihrer Anführer brechen die vier auf, doch die temperamentvolle Eichhornpfote und Federschweifs Bruder Sturmpelz schließen sich ihnen heimlich an. Auf ihrer langen, gefährlichen Reise durch fremde Gebiete und vorbei an feindseligen Zweibeinern wachsen die Katzen der verschiedenen Clans zu echten Freunden zusammen. Gleichzeitig beginnen im heimischen Wald gigantische Zweibeiner-Monster damit, Bäume zu fällen und einen neuen Donnerweg mitten durch das Territorium zu bauen. Am Meer angekommen, treffen die Reisenden schließlich auf Mitternacht – eine weise Dachsin, die die Sprache der Katzen spricht. Sie offenbart ihnen die schockierende Wahrheit: Die Zweibeiner werden den gesamten Wald zerstören, und die Clans müssen eine neue Heimat finden."
+            },
+            {
+                id: "s2-b2",
+                seasonId: "staffel-2",
+                seasonName: "Staffel 2: Die neue Prophezeiung",
+                volume: "Band 2",
+                releaseOrder: "Erscheinungsjahr 2005 (DE: 2010)",
+                title: "Mondschein",
+                characters: ["Blattpfote", "Sturmpelz", "Federschweif", "Brombeerkralle", "Eichhornpfote", "Krähenpfote"],
+                summary: "Auf dem Rückweg in den Wald wählen die sechs Gefährten eine Abkürzung über die hohen Berge und begegnen dort dem Stamm des eilenden Wassers. Diese Bergkatzen leben hinter einem Wasserfall und werden von einer grausamen Riesenkatze namens Scharfzahn terrorisiert, die bereits viele Stammeskatzen getötet hat. Der Heiler Steinsager deutet eine Prophezeiung falsch und hält Sturmpelz für den prophezeiten Silberkater, der den Stamm retten soll, weshalb er ihn gefangen nimmt. Die Freunde befreien Sturmpelz zunächst, kehren aber aus Mitgefühl zurück, als sie erkennen, wie verzweifelt der Stamm unter Scharfzahn leidet. In einem dramatischen Kampf in der Höhle erkennt Federschweif, dass eigentlich sie gemeint ist, und stürzt sich auf einen herabhängenden spitzen Stein, der Scharfzahn erschlägt, aber auch ihr selbst das Leben kostet. Im heimischen Wald spitzt sich derweil die Lage dramatisch zu: Der SchattenClan ist bereits geflohen, Beute wird knapp, und Zweibeiner fangen Katzen in Käfigen ein, darunter auch Blattpfote und Graustreif."
+            },
+            {
+                id: "s2-b3",
+                seasonId: "staffel-2",
+                seasonName: "Staffel 2: Die neue Prophezeiung",
+                volume: "Band 3",
+                releaseOrder: "Erscheinungsjahr 2005 (DE: 2011)",
+                title: "Morgenröte",
+                characters: ["Blattpfote", "Brombeerkralle", "Eichhornpfote", "Graustreif", "Feuerstern", "Krähenpfote"],
+                summary: "Die heimgekehrten Reisenden finden den Wald in Trümmern vor und berichten den Anführern von der Botschaft der Dachsin Mitternacht. Doch bevor die Clans aufbrechen können, muss Blattpfote aus der Gefangenschaft der Zweibeiner befreit werden, wo sie gemeinsam mit anderen Katzen in Käfigen sitzt. Brombeerkralle, Eichhornpfote und Feuerstern führen eine gewagte Rettungsaktion an, bei der Graustreif selbstlos zurückbleibt, um die anderen zu schützen, und von einem Zweibeiner-Monster verschleppt wird. Nach diesem schweren Verlust erkennen auch die letzten zweifelnden Anführer, dass der Wald verloren ist, und die vier Clans brechen gemeinsam auf die Große Reise auf. Der Weg führt sie über den gefährlichen Donnerweg und hinauf in die eisigen Berge, wo sie erneut beim Stamm des eilenden Wassers Rast machen. Dort helfen die Clan-Katzen dem Stamm dabei, Eindringlinge abzuwehren, und Krähenpfote erhält zu Ehren seiner verstorbenen Gefährtin den Kriegernamen Krähenfeder. Schließlich erreichen die erschöpften Clans den Gipfel des letzten Berges und erblicken unter sich ein weites, unberührtes Tal mit einem großen See."
+            },
+            {
+                id: "s2-b4",
+                seasonId: "staffel-2",
+                seasonName: "Staffel 2: Die neue Prophezeiung",
+                volume: "Band 4",
+                releaseOrder: "Erscheinungsjahr 2005 (DE: 2011)",
+                title: "Sternenglanz",
+                characters: ["Brombeerkralle", "Eichhornschweif", "Blattpfote", "Habichtfrost", "Kurzbart", "Schlammkralle"],
+                summary: "Die vier Clans steigen hinab in das neue Territorium rund um den großen See und müssen ihre Grenzen völlig neu aufteilen. Eine kleine Erkundungsgruppe findet für jeden Clan ein passendes Lager, vom Steinbruch für den DonnerClan bis hin zu den dichten Kiefern für den SchattenClan. Als der alte WindClan-Anführer Riesenstern im Sterben liegt, ernennt er in letzter Sekunde Kurzbart anstelle von Schlammkralle zu seinem Nachfolger, da er dessen Kriegslust fürchtet. Der ehrgeizige FlussClan-Krieger Habichtfrost, der insgeheim Tigersterns Sohn und Brombeerkralles Halbbruder ist, schürt daraufhin Misstrauen gegen Kurzbart. Zwischen Brombeerkralle und Eichhornschweif kommt es zum heftigen Streit, weil Eichhornschweif Habichtfrost für gefährlich hält, während Brombeerkralle seinem Halbbruder vertraut. Schließlich zettelt Schlammkralle mit Habichtfrosts Hilfe eine blutige Rebellion gegen Kurzbart an, die jedoch mit Hilfe der anderen Clans niedergeschlagen wird. Gleichzeitig entdeckt Blattpfote den geheimnisvollen Mondsee, den neuen heiligen Ort zur Kommunikation mit dem SternenClan, und erhält ihren Heilernamen Blattsee."
+            },
+            {
+                id: "s2-b5",
+                seasonId: "staffel-2",
+                seasonName: "Staffel 2: Die neue Prophezeiung",
+                volume: "Band 5",
+                releaseOrder: "Erscheinungsjahr 2006 (DE: 2011)",
+                title: "Dämmerung",
+                characters: ["Blattsee", "Krähenfeder", "Brombeerkralle", "Eichhornschweif", "Rußpelz", "Habichtfrost"],
+                summary: "Nach dem gescheiterten Aufstand wachsen die Spannungen zwischen den Clans am See erneut, während Brombeerkralle im Traum im Wald der Finsternis von seinem toten Vater Tigerstern trainiert wird. Tigerstern versucht, Brombeerkralle und Habichtfrost davon zu überzeugen, gemeinsam die Macht über alle Clans an sich zu reißen. Unterdessen gestehen sich die Heilerin Blattsee und der WindClan-Krieger Krähenfeder ihre verbotene Liebe ein und beschließen, die Clans gemeinsam zu verlassen. Auf ihrer Flucht begegnen sie der Dachsin Mitternacht, die sie vor einem bevorstehenden Racheangriff eines ganzen Dachsrudels auf den DonnerClan warnt. Blattsee kehrt sofort um, um ihren Clan zu retten, und erreicht das Lager mitten in einem verheerenden Kampf gegen die übermächtigen Dachse. Während des Gefechts verteidigt die Heilerin Rußpelz tapfer die frisch geborenen Jungen von Ampferschweif und opfert dabei ihr eigenes Leben, genau wie der SternenClan es vorausgesagt hatte. Erst als der WindClan zur Hilfe eilt, können die Dachse vertrieben werden, und Blattsee beschließt, fortan ganz für ihren Clan da zu sein."
+            },
+            {
+                id: "s2-b6",
+                seasonId: "staffel-2",
+                seasonName: "Staffel 2: Die neue Prophezeiung",
+                volume: "Band 6",
+                releaseOrder: "Erscheinungsjahr 2006 (DE: 2012)",
+                title: "Sonnenuntergang",
+                characters: ["Brombeerkralle", "Habichtfrost", "Feuerstern", "Eichhornschweif", "Blattsee", "Aschenpelz"],
+                summary: "Der DonnerClan erholt sich mühsam vom verheerenden Dachsangriff, während Feuerstern vor der schwierigen Entscheidung steht, einen neuen Zweiten Anführer anstelle des verschollenen Graustreif zu ernennen. Obwohl Brombeerkralle noch kein eigener Schüler zugeteilt wurde, erhält Blattsee ein Zeichen vom SternenClan, das eindeutig auf Brombeerkralle als neuen Stellvertreter hinweist. Doch Habichtfrost gibt seinen finsteren Plan nicht auf und lockt Feuerstern mit Hilfe des verbitterten DonnerClan-Kriegers Aschenpelz in eine tödliche Fuchsfalle am Seeufer. Am Ort des Geschehens angekommen, fordert Habichtfrost seinen Halbbruder Brombeerkralle auf, Feuerstern den Todesstoß zu versetzen und endlich die Führung des DonnerClans zu übernehmen. Brombeerkralle steht vor der schwersten Prüfung seines Lebens, entscheidet sich aber für die Treue zu seinem Anführer und befreit Feuerstern aus der Drahtschlinge. Im anschließenden Zweikampf tötet Brombeerkralle seinen skrupellosen Halbbruder Habichtfrost mit dem Holzpfahl der Falle. Am Ende versöhnen sich Brombeerkralle und Eichhornschweif, und der DonnerClan blickt hoffnungsvoll in eine neue Zukunft."
+            },
+
+            // ======================== STAFFEL 3: DIE MACHT DER DREI ========================
+            {
+                id: "s3-b1",
+                seasonId: "staffel-3",
+                seasonName: "Staffel 3: Die Macht der Drei",
+                volume: "Band 1",
+                releaseOrder: "Erscheinungsjahr 2007 (DE: 2012)",
+                title: "Der geheime Blick",
+                characters: ["Häherpfote", "Löwenpfote", "Distelpfote", "Blattsee", "Feuerstern", "Graustreif"],
+                summary: "Im DonnerClan wachsen die drei jungen Geschwister Häherpfote, Löwenpfote und Distelpfote heran, die als Kinder von Brombeerkralle und Eichhornschweif gelten. Der blinde Häherpfote möchte unbedingt ein vollwertiger Krieger werden, doch nach einem Sturz in den Steinbruch erkennt er, dass er stattdessen eine außergewöhnliche Gabe besitzt: Er kann in die Gedanken und Träume anderer Katzen blicken. Widerwillig akzeptiert er seine Bestimmung als Heilerschüler bei Blattsee, während sein Bruder Löwenpfote eine übernatürliche Unbesiegbarkeit im Kampf entdeckt. Ihre Schwester Distelpfote hingegen träumt zunächst davon, Heilerin zu werden, merkt aber schnell, dass ihre wahre Stärke im Befolgen und Verteidigen des Gesetzes der Krieger liegt. Auf einer Großen Versammlung sorgt eine sensationelle Rückkehr für Aufsehen, als der totgeglaubte Graustreif gemeinsam mit seiner neuen Gefährtin Millie am See auftaucht. Bei den darauffolgenden Tag-Versammlungen der Schüler geraten Häherpfote und seine Geschwister in gefährliche Abenteuer, darunter eine Rettungsaktion für junge WindClan-Katzen in den unterirdischen Tunneln. Langsam wird klar, dass auf den drei Geschwistern eine uralte Prophezeiung ruht."
+            },
+            {
+                id: "s3-b2",
+                seasonId: "staffel-3",
+                seasonName: "Staffel 3: Die Macht der Drei",
+                volume: "Band 2",
+                releaseOrder: "Erscheinungsjahr 2007 (DE: 2012)",
+                title: "Fluss der Finsternis",
+                characters: ["Löwenpfote", "Häherpfote", "Distelpfote", "Heidepfote", "Tigerstern", "Kurzbart"],
+                summary: "Zwischen dem DonnerClan und dem WindClan brechen heftige Grenzstreitigkeiten aus, während Löwenpfote eine heimliche Freundschaft mit der jungen WindClan-Schülerin Heidepfote beginnt. Nacht für Nacht treffen sich die beiden heimlich in den vergessenen unterirdischen Tunneln unter den Territorien und erfinden ihr eigenes kleines Clan-Spiel. Doch als ein schwerer Wolkenbruch die Tunnel plötzlich flutet, werden drei junge WindClan-Junge in den Tiefen eingeschlossen. Löwenpfote, Heidepfote, Distelpfote und Häherpfote wagen eine lebensgefährliche Rettungsaktion durch die dunklen Wasserläufe und bringen die Jungen wohlbehalten ans Tageslicht. Gleichzeitig erhält Löwenpfote im Traum Besuch von Tigerstern und Habichtfrost, die versuchen, ihn für ihre dunklen Ziele zu gewinnen. Häherpfote entdeckt unterdessen durch seine Träume einen geheimnisvollen, uralten Stock am Seeufer, der ihn mit den Geistern längst vergangener Katzen verbindet. Auch im FlussClan brodelt es, da Leopardenstern Probleme hat, ihren Clan nach dem Verschwinden vieler Zweibeiner-Hauskätzchen zusammenzuhalten."
+            },
+            {
+                id: "s3-b3",
+                seasonId: "staffel-3",
+                seasonName: "Staffel 3: Die Macht der Drei",
+                volume: "Band 3",
+                releaseOrder: "Erscheinungsjahr 2008 (DE: 2013)",
+                title: "Verbannt",
+                characters: ["Sturmpelz", "Bach", "Häherpfote", "Löwenpfote", "Distelpfote", "Krähenfeder"],
+                summary: "Sturmpelz und seine Gefährtin Bach kehren aus den Bergen an den See zurück, weil sie vom Stamm des eilenden Wassers verbannt wurden. Sie berichten, dass skrupellose Streuner immer weiter in die Berge vordringen, die Beute des Stammes stehlen und die Stammeskatzen terrorisieren. Brombeerkralle beschließt, gemeinsam mit Eichhornschweif, Sturmpelz, Krähenfeder, Bernsteinpelz sowie den drei jungen Geschwistern Häherpfote, Löwenpfote und Distelpfote in die Berge zu reisen, um zu helfen. In den Bergen angekommen, stellen sie fest, dass der Stamm zu stolz und unbeweglich ist, um sich gegen die Angreifer zur Wehr zu setzen. Häherpfote reist in einer Vision tief in die Vergangenheit zurück und entdeckt, dass die Vorfahren des Stammes einst aus dem alten Wald in die Berge gezogen sind. Mit diesem Wissen gelingt es den Clan-Katzen, dem Stamm neue Kampftechniken beizubringen und gemeinsam feste Territoriumsgrenzen gegen die Streuner zu verteidigen. Nach dem Sieg werden Sturmpelz und Bach wieder im Stamm aufgenommen, während die Gruppe an den See zurückkehrt."
+            },
+            {
+                id: "s3-b4",
+                seasonId: "staffel-3",
+                seasonName: "Staffel 3: Die Macht der Drei",
+                volume: "Band 4",
+                releaseOrder: "Erscheinungsjahr 2008 (DE: 2013)",
+                title: "Zeit der Dunkelheit",
+                characters: ["Häherpfote", "Löwenpfote", "Distelpfote", "Sol", "Schwarzstern", "Blattsee"],
+                summary: "Ein geheimnisvoller Einzelgänger namens Sol taucht an den Grenzen der Clans auf und warnt vor einer bevorstehenden Finsternis, die die Sonne verschlingen werde. Als der WindClan kurz darauf mit Unterstützung des FlussClans einen überraschenden Großangriff auf das Lager des DonnerClans startet, tobt eine der blutigsten Schlachten am See. Mitten im Kampf verdunkelt sich plötzlich der Himmel durch eine totale Sonnenfinsternis, was alle Krieger in blanke Panik versetzt. Sol nutzt die Verwirrung geschickt aus und überzeugt den erschütterten SchattenClan-Anführer Schwarzstern davon, dass der SternenClan sie verlassen habe und das Gesetz der Krieger nutzlos sei. Der SchattenClan gibt daraufhin seinen Glauben an die Ahnen komplett auf, während Feuerstern vergebens versucht, Schwarzstern zur Vernunft zu bringen. Zur gleichen Zeit reist Häherpfote in seinen Visionen erneut in die Vergangenheit des Stammes und beeinflusst dort die Entscheidung der Ur-Katzen, in die Berge aufzubrechen. Am Ende werden Löwenpfote und Distelpfote für ihre Tapferkeit zu den neuen Kriegern Löwenglut und Distelblatt ernannt."
+            },
+            {
+                id: "s3-b5",
+                seasonId: "staffel-3",
+                seasonName: "Staffel 3: Die Macht der Drei",
+                volume: "Band 5",
+                releaseOrder: "Erscheinungsjahr 2008 (DE: 2013)",
+                title: "Lange Schatten",
+                characters: ["Häherfeder", "Distelblatt", "Löwenglut", "Aschenpelz", "Eichhornschweif", "Sol"],
+                summary: "Im DonnerClan bricht der Grüne Husten aus, und viele Katzen – darunter auch Feuerstern – schweben in Lebensgefahr, weil die lebenswichtige Katzenminze ausgegangen ist. Häherpfote und Löwenglut schleichen sich in das WindClan-Territorium, um dort Katzenminze zu holen, und retten den Clan vor dem Schlimmsten. Wenig später schmieden Häherpfote, Löwenglut und Distelblatt gemeinsam mit den Jungen von Bernsteinpelz einen cleveren Plan, um Sol als Betrüger zu entlarven. Mit einer vorgetäuschten Botschaft des SternenClans bringen sie Schwarzstern dazu, seinen Glauben wiederzufinden und Sol aus dem SchattenClan zu verbannen. Kurz darauf wird Häherpfote zum vollwertigen Heiler Häherfeder ernannt und erfährt am Mondsee die schockierende Wahrheit über die Prophezeiung der Drei. Doch die größte Gefahr lauert im eigenen Lager: Ein verheerendes Feuer bricht aus und schneidet Eichhornschweif und ihre drei Kinder in einer Flammenwand ein. Um ihre Leben vor dem rachsüchtigen Aschenpelz zu retten, gesteht Eichhornschweif ihm unter Tränen, dass sie gar nicht die leibliche Mutter der Drei ist."
+            },
+            {
+                id: "s3-b6",
+                seasonId: "staffel-3",
+                seasonName: "Staffel 3: Die Macht der Drei",
+                volume: "Band 6",
+                releaseOrder: "Erscheinungsjahr 2009 (DE: 2014)",
+                title: "Sonnenaufgang",
+                characters: ["Distelblatt", "Häherfeder", "Löwenglut", "Blattsee", "Krähenfeder", "Sol"],
+                summary: "Kurz vor der Großen Versammlung wird Aschenpelz tot im Grenzbach zwischen DonnerClan und WindClan aufgefunden, was den gesamten Clan in Aufruhr versetzt. Während eine Patrouille loszieht, um den verdächtigen Einzelgänger Sol aufzuspüren und ins Lager zu bringen, forschen Häherfeder, Löwenglut und Distelblatt nach ihrer wahren Herkunft. Schließlich decken sie das wohlgehütete Geheimnis auf: Ihre wahren Eltern sind die DonnerClan-Heilerin Blattsee und der WindClan-Krieger Krähenfeder, die gegen das Gesetz der Krieger verstoßen haben. Für Distelblatt bricht eine Welt zusammen, da ihr ganzes Leben auf der strengen Einhaltung des Gesetzes aufgebaut war. Aus Verzweiflung enthüllt sie die verbotene Beziehung ihrer Eltern öffentlich vor allen vier Clans auf der Großen Versammlung und gesteht ihren Geschwistern zudem, dass sie selbst Aschenpelz getötet hat, um das Geheimnis zu schützen. Blattsee legt daraufhin voller Scham ihr Amt als Heilerin nieder, und Distelblatt flieht in die dunklen unterirdischen Tunnel, die kurz darauf über ihr einstürzen."
+            },
+
+            // ======================== STAFFEL 4: ZEICHEN DER STERNE ========================
+            {
+                id: "s4-b1",
+                seasonId: "staffel-4",
+                seasonName: "Staffel 4: Zeichen der Sterne",
+                volume: "Band 1",
+                releaseOrder: "Erscheinungsjahr 2009 (DE: 2014)",
+                title: "Der vierte Schüler",
+                characters: ["Taubenpfote", "Efeupfote", "Häherfeder", "Löwenglut", "Tigerherz", "Feuerstern"],
+                summary: "Nach Distelblatts vermeintlichem Tod fragen sich Häherfeder und Löwenglut verzweifelt, wer die dritte Katze der Prophezeiung sein könnte. Die Antwort offenbart sich in der jungen DonnerClan-Schülerin Taubenpfote, die über außergewöhnlich scharfe Sinne verfügt und Geräusche sowie Bewegungen meilenweit entfernt wahrnehmen kann. Gleichzeitig herrscht am See eine verheerende Dürre, da das Wasser des großen Sees immer weiter zurückgeht und die Fische sterben. Mit ihren besonderen Fähigkeiten spürt Taubenpfote weit flussaufwärts die Ursache der Katastrophe auf: Riesige braune Tiere – Biber – haben einen gewaltigen Staudamm errichtet und halten das gesamte Wasser zurück. Eine gemischte Patrouille aus allen vier Clans bricht zu dem Staudamm auf, um das Hindernis in einem gefährlichen Einsatz zu zerstören. Unterdessen fühlt sich Taubenpfotes Schwester Efeupfote zunehmend ausgeschlossen und eifersüchtig auf die besondere Aufmerksamkeit, die Taubenpfote erhält. Dadurch wird Efeupfote zu einem leichten Ziel für den Geist von Habichtfrost, der sie in ihren Träumen in den Wald der Finsternis lockt."
+            },
+            {
+                id: "s4-b2",
+                seasonId: "staffel-4",
+                seasonName: "Staffel 4: Zeichen der Sterne",
+                volume: "Band 2",
+                releaseOrder: "Erscheinungsjahr 2010 (DE: 2014)",
+                title: "Fernes Echo",
+                characters: ["Efeupfote", "Taubenpfote", "Häherfeder", "Löwenglut", "Habichtfrost", "Dornenkralle"],
+                summary: "Im Wald der Finsternis trainiert Habichtfrost die ehrgeizige Efeupfote und redet ihr ein, sie müsse ihren Clan mit allen Mitteln vor dem SchattenClan beschützen. Durch eine manipulierte Vision verleitet Efeupfote Feuerstern dazu, eine neue Grenzlinie im Territorium des SchattenClans zu beanspruchen, was zu einer blutigen Schlacht führt. In diesem Kampf verliert Feuerstern ein weiteres seiner Leben, und der SchattenClan-Anführer Rostfell kommt tragischerweise ums Leben. Während Efeupfote von Schuldgefühlen geplagt wird, lauscht Taubenpfote mit ihren scharfen Sinnen den Gesprächen im SchattenClan und bemerkt die zunehmende Unruhe am See. Häherfeder erkennt derweil durch Begegnungen mit dem SternenClan, dass auch die Ahnen selbst gespalten sind und eine gewaltige Schlacht zwischen den Sternen und der Finsternis bevorsteht. Am Ende des Buches stürzt während eines schweren Sturms eine riesige alte Buche mitten in das Lager des DonnerClans. Dabei wird die junge Schülerin Dornenpfote schwer an der Wirbelsäule verletzt, und die mutige Kriegerin Langschweif stirbt beim Versuch, eine Maus aus dem Bau zu retten."
+            },
+            {
+                id: "s4-b3",
+                seasonId: "staffel-4",
+                seasonName: "Staffel 4: Zeichen der Sterne",
+                volume: "Band 3",
+                releaseOrder: "Erscheinungsjahr 2010 (DE: 2015)",
+                title: "Stimmen der Nacht",
+                characters: ["Efeupfote", "Taubenpfote", "Häherfeder", "Tigerherz", "Flammenpfote", "Schwarzstern"],
+                summary: "Die Grenzen zwischen dem SternenClan und dem Wald der Finsternis verschwimmen immer mehr, und sogar lebende Krieger wie Tigerherz aus dem SchattenClan trainieren dort im Schlaf. Als Efeupfote erkennt, wie grausam Tigerstern und Habichtfrost wirklich sind, beschließt sie, im Wald der Finsternis als Spionin für Häherfeder, Löwenglut und Taubenpfote zu arbeiten. Im SchattenClan erlebt der junge Heilerschüler Flammenpfote unterdessen eine schreckliche Tragödie, als das Eis auf dem zugefrorenen See während eines Spiels bricht. Beim Versuch, den eingebrochenen Flammenpfote aus dem eiskalten Wasser zu ziehen, stürzt auch Häherfeder hinein und kann den SchattenClan-Heiler nicht mehr retten. Der Geist von Flammenpfote macht Häherfeder daraufhin im SternenClan schwere Vorwürfe und schürt so weiteres Misstrauen zwischen den Ahnen der vier Clans. Taubenpfote leidet derweil darunter, dass ihre Schwester Efeupfote ihr ihre nächtlichen Ausflüge verschweigt, und sucht heimlich Trost bei dem SchattenClan-Krieger Tigerherz. Nach ihrer Ernennung zu den Kriegerinnen Taubenflug und Efeusee wird Efeusee im Wald der Finsternis vor eine grausame Prüfung gestellt, um ihre Loyalität zu beweisen."
+            },
+            {
+                id: "s4-b4",
+                seasonId: "staffel-4",
+                seasonName: "Staffel 4: Zeichen der Sterne",
+                volume: "Band 4",
+                releaseOrder: "Erscheinungsjahr 2011 (DE: 2015)",
+                title: "Spur des Mondes",
+                characters: ["Häherfeder", "Taubenflug", "Efeusee", "Steinsager", "Half Moon", "Löwenglut"],
+                summary: "Um das Rätsel um die Ursprünge der Clans und die dunkle Bedrohung zu lösen, reist Häherfeder gemeinsam mit Taubenflug, Efeusee und zwei weiteren Kriegern zurück in die hohen Berge zum Stamm des eilenden Wassers. Der Stamm befindet sich in einer tiefen Krise, da der alte Heiler Steinsager im Sterben liegt und keinen Nachfolger benannt hat. Häherfeder wird von einer geheimnisvollen Kraft erneut tief in die Vergangenheit gezogen, in die Zeit der Ur-Katzen am See. Dort begegnet er der sanften Kätzin Halber Mond und führt die Ur-Katzen auf eine gefährliche Reise über die Berge in ihre neue Heimat. In der Vergangenheit ernennt er Halber Mond zur allerersten Steinsagerin des Stammes und verspricht ihr, dass sie sich eines Tages wiedersehen werden. Mit diesem Wissen in die Gegenwart zurückgekehrt, hilft Häherfeder dem Stamm dabei, einen neuen Heiler zu bestimmen und den Zusammenhalt wiederherzustellen. Gleichzeitig gestehen sich Taubenflug und Efeusee endlich ihre Geheimnisse ein und vereinen ihre Kräfte für den kommenden Kampf."
+            },
+            {
+                id: "s4-b5",
+                seasonId: "staffel-4",
+                seasonName: "Staffel 4: Zeichen der Sterne",
+                volume: "Band 5",
+                releaseOrder: "Erscheinungsjahr 2011 (DE: 2015)",
+                title: "Der vergessene Krieger",
+                characters: ["Distelblatt", "Efeusee", "Taubenflug", "Häherfeder", "Sol", "Löwenglut"],
+                summary: "Als zwei junge DonnerClan-Schüler in den unterirdischen Tunneln verloren gehen, taucht völlig unerwartet eine geheimnisvolle fremde Kätzin auf und rettet ihnen das Leben. Es ist Distelblatt, die den Einsturz der Tunnel damals überlebt und monatelang allein in der Dunkelheit gehaust hat. Sie kehrt in den DonnerClan zurück und bereut ihre früheren Taten zutiefst, während Blattsee und Häherfeder sie mit offenen Armen wieder aufnehmen. Doch die Ruhe währt nicht lange, denn der manipulatorische Einzelgänger Sol taucht im WindClan auf und stachelt ihn zu einem hinterhältigen Angriff durch die Tunnel auf den DonnerClan an. Distelblatt und Efeusee nutzen ihr Wissen über die unterirdischen Gänge, um den Angriff rechtzeitig aufzudecken und zurückzuschlagen. Im anschließenden Gefecht vertreibt Distelblatt Sol endgültig aus dem Territorium der Clans. Gleichzeitig gelingt es Häherfeder mit Flammenpfotes Vergebung, die zerstrittenen Ahnen im SternenClan endlich wieder zu vereinen."
+            },
+            {
+                id: "s4-b6",
+                seasonId: "staffel-4",
+                seasonName: "Staffel 4: Zeichen der Sterne",
+                volume: "Band 6",
+                releaseOrder: "Erscheinungsjahr 2012 (DE: 2016)",
+                title: "Die letzte Hoffnung",
+                characters: ["Feuerstern", "Häherfeder", "Löwenglut", "Taubenflug", "Efeusee", "Distelblatt"],
+                summary: "Die Armee des Waldes der Finsternis unter der Führung von Tigerstern und Braunstern rüstet sich zum vernichtenden Großangriff auf alle vier Clans am See. In letzter Minute erkennt Häherfeder die wahre Bedeutung der Prophezeiung: Es gibt eine vierte Katze, die die Drei anführen muss – und es ist Feuerstern selbst. Als die dunklen Krieger aus den Schatten hervorbrechen, entbrennt in allen vier Lagern gleichzeitig eine verheerende Schlacht um Leben und Tod. Distelblatt kämpft heldenhaft an der Seite ihrer Familie, opfert jedoch ihr eigenes Leben, um Efeusee vor dem tödlichen Schlag von Habichtfrost zu retten. Auch der SternenClan steigt schließlich vom Himmel herab und kämpft Seite an Seite mit den lebenden Kriegern gegen die Finsternis. Im Lager des DonnerClans stellt sich Feuerstern seinem alten Erzfeind Tigerstern ein letztes Mal im Zweikampf und vernichtet dessen Geist endgültig. Kurz darauf wird Feuerstern von einem brennenden Baum getroffen oder erliegt seinen schweren Wunden, doch der Wald ist gerettet und Brombeerkralle tritt als Brombeerstern seine Nachfolge an."
+            },
+
+            // ======================== STAFFEL 5: DER BEGINN DER CLANS ========================
+            {
+                id: "s5-b1",
+                seasonId: "staffel-5",
+                seasonName: "Staffel 5: Der Beginn der Clans",
+                volume: "Band 1",
+                releaseOrder: "Erscheinungsjahr 2013 (DE: 2016)",
+                title: "Der Sonnenpfad",
+                characters: ["Grauer Flug", "Wolkenhimmel", "Zackiger Berg", "Strahlender Bach", "Schildkrötenschwanz", "Steinsager"],
+                summary: "Lange vor der Gründung der vier Clans lebt eine Gruppe von Bergkatzen unter extrem harten Bedingungen in den eisigen Bergen. Als der Hunger immer unerträglicher wird, führt der ehrgeizige Kater Wolkenhimmel eine Gruppe mutiger Katzen dem Sonnenpfad folgend in ein neues, beutereiches Land. Sein treuer Bruder Grauer Flug bleibt zunächst in den Bergen zurück, bricht aber ebenfalls auf, als ihr jüngerer Bruder Zackiger Berg heimlich den Reisenden hinterherläuft. Nach einer beschwerlichen Wanderung über weite Ebenen und gefährliche Donnerwege erreichen sie schließlich ein wunderschönes Tal mit Wald, Moor, Fluss und Kiefern. Doch kaum haben sie sich eingelebt, beginnen erste Spannungen zwischen dem sanftmütigen Grauer Flug und dem zunehmend kontrollsüchtigen Wolkenhimmel. Während Grauer Flug auf dem offenen Moor bleibt, zieht Wolkenhimmel in den dichten Wald und vertreibt gnadenlos alle anderen Katzen aus seinem neuen Gebiet. Die einst so enge Gemeinschaft der Bergkatzen droht an Gier und Misstrauen zu zerbrechen."
+            },
+            {
+                id: "s5-b2",
+                seasonId: "staffel-5",
+                seasonName: "Staffel 5: Der Beginn der Clans",
+                volume: "Band 2",
+                releaseOrder: "Erscheinungsjahr 2013 (DE: 2017)",
+                title: "Donnerschlag",
+                characters: ["Donner", "Grauer Flug", "Wolkenhimmel", "Schildkrötenschwanz", "Großer Schatten", "Wolkenpelz"],
+                summary: "Wolkenhimmel verliert nach dem Tod seiner Gefährtin Sturm und seiner Jungen jedes Mitgefühl und verstößt sogar seinen einzigen überlebenden Sohn Donner. Grauer Flug nimmt den kleinen Kater liebevoll auf dem Moor auf und zieht ihn wie seinen eigenen Sohn groß. Gleichzeitig spitzen sich die Konflikte im Wald weiter zu, weil Wolkenhimmel seine Grenzen immer weiter ausdehnt und fremde Katzen blutig angreift. Als Schildkrötenschwanz bei dem Versuch, ihre vom Hauskater Tom entführten Jungen zu retten, auf einem Donnerweg überfahren wird, übernimmt Grauer Flug auch die Verantwortung für ihre Kinder. Donner wächst zu einem starken, gerechten jungen Kater heran und versucht vergeblich, eine Brücke zwischen seinem leiblichen Vater Wolkenhimmel und seinem Ziehvater Grauer Flug zu bauen. Als Wolkenhimmel bei einem weiteren Grenzkonflikt einen alten Freund tötet, erkennt Donner endgültig die Grausamkeit seines Vaters und wendet sich von ihm ab. Die Gruppen auf dem Moor und im Wald bereiten sich auf eine unvermeidliche Auseinandersetzung vor."
+            },
+            {
+                id: "s5-b3",
+                seasonId: "staffel-5",
+                seasonName: "Staffel 5: Der Beginn der Clans",
+                volume: "Band 3",
+                releaseOrder: "Erscheinungsjahr 2014 (DE: 2017)",
+                title: "Der erste Kampf",
+                characters: ["Grauer Flug", "Wolkenhimmel", "Donner", "Großer Schatten", "Großer Schrei", "Wolkenpelz"],
+                summary: "Die Spannungen zwischen den Katzen auf dem Moor unter Großer Schatten und den Waldkatzen unter Wolkenhimmel erreichen ihren Höhepunkt. Um den Streit ein für alle Mal zu klären, vereinbaren beide Seiten ein Treffen bei den Vier Bäumen, doch Wolkenhimmel verwandelt die Zusammenkunft in einen hinterhältigen Überfall. Es entbrennt die erste große, blutige Schlacht im Wald, bei der viele ehemalige Freunde und Geschwister gegeneinander kämpfen und ihr Leben lassen. Grauer Flug wird durch eingeatmeten Rauch eines früheren Waldbrandes schwer geschwächt und muss hilflos mitansehen, wie Wolkenhimmel beinahe seinen eigenen Sohn Donner tötet. Erst als die Geister der gefallenen Katzen aus dem Sternenhimmel herabsteigen und den Kämpfenden ins Gewissen reden, endet das Blutvergießen. Erschüttert von den vielen Toten, erkennen die Überlebenden, dass sie Regeln für das Zusammenleben und die Grenzen brauchen. Aus dem Schmerz dieser ersten Schlacht heraus entsteht der Grundstein für das zukünftige Gesetz der Krieger."
+            },
+            {
+                id: "s5-b4",
+                seasonId: "staffel-5",
+                seasonName: "Staffel 5: Der Beginn der Clans",
+                volume: "Band 4",
+                releaseOrder: "Erscheinungsjahr 2014 (DE: 2017)",
+                title: "Der leuchtende Stern",
+                characters: ["Donner", "Grauer Flug", "Wolkenhimmel", "Großer Schatten", "Strömender Fluss", "Einauge"],
+                summary: "Nach der verheerenden Schlacht bei den Vier Bäumen herrscht ein brüchiger Frieden, doch schon bald sucht eine geheimnisvolle, tödliche Krankheit die verschiedenen Lagergruppen heim. Grauer Flug, Donner und Wolkenhimmel müssen ihre persönlichen Differenzen beiseitelegen, um gemeinsam nach den heilenden Blättern einer seltenen Pflanze – dem Leuchtenden Stern – zu suchen. Gleichzeitig nutzt ein grausamer, narbenübersäter Streuner namens Einauge die Schwäche der Katzen aus und übernimmt mit Gewalt die Führung über Wolkenhimmels Gruppe. Einauge verletzt Wolkenhimmel schwer und zwingt die Waldkatzen zu brutalen Überfällen auf die anderen Gruppen. In ihrer größten Not schmieden Donner, Grauer Flug, Großer Schatten und der gelassene Strömender Fluss ein Bündnis, um Einauge zu stürzen. In einem harten Kampf gelingt es ihnen, den Tyrannen zu besiegen, und Wolkenhimmel beginnt endlich, seine früheren Fehler aufrichtig zu bereuen. Die einzelnen Gruppen beginnen nun, sich in eigenen Lagern im Wald, auf dem Moor, im Kiefernwald und am Fluss niederzulassen."
+            },
+            {
+                id: "s5-b5",
+                seasonId: "staffel-5",
+                seasonName: "Staffel 5: Der Beginn der Clans",
+                volume: "Band 5",
+                releaseOrder: "Erscheinungsjahr 2015 (DE: 2018)",
+                title: "Der geteilte Wald",
+                characters: ["Grauer Flug", "Donner", "Wolkenhimmel", "Großer Schatten", "Windläufer", "Kieselherz"],
+                summary: "Die Katzen im Tal leben inzwischen in fünf eigenständigen Gemeinschaften: Donner im großen Laubwald, Wolkenhimmel im angrenzenden Waldgebiet, Großer Schatten in den Kiefern, Windläufer auf dem Moor und Strömender Fluss auf der Flussinsel. Doch als die Blattleere naht und die Beute knapp wird, flammen alte Streitigkeiten über Jagdrechte und unsichtbare Grenzen wieder auf. Wolkenhimmel wird erneut von Verlusten heimgesucht, als seine Gefährtin Sternenblume und ihre gemeinsamen Jungen von dem rachsüchtigen Streuner Schlitzer entführt werden. Grauer Flug und Donner eilen Wolkenhimmel trotz aller früheren Konflikte sofort zu Hilfe, um die Geiseln aus der gefährlichen Zweibeiner-Scheune zu befreien. Während dieser Rettungsaktion wächst das gegenseitige Verständnis zwischen den Gruppen, und auch die ersten Heiler wie Kieselherz und Wolkenpelz entdecken ihre besondere Verbindung zu den Ahnen. Am Ende wird klar, dass der Wald zwar in fünf Reviere geteilt ist, die Katzen aber nur überleben können, wenn sie einander in der Not beistehen."
+            },
+            {
+                id: "s5-b6",
+                seasonId: "staffel-5",
+                seasonName: "Staffel 5: Der Beginn der Clans",
+                volume: "Band 6",
+                releaseOrder: "Erscheinungsjahr 2015 (DE: 2018)",
+                title: "Der Sternenpfad",
+                characters: ["Grauer Flug", "Donner", "Wolkenhimmel", "Großer Schatten", "Windläufer", "Strömender Fluss"],
+                summary: "Der skrupellose Streuner Schlitzer hat sich mit einer großen Bande von Gesetzlosen im Wald niedergelassen und terrorisiert alle fünf Katzengruppen mit unbarmherzigen Raubzügen. Als Schlitzer auch noch Wolkenhimmels Junges Schwarzohr entführt, müssen alle fünf Anführer zum ersten Mal als geschlossene Einheit handeln. In einem gewagten Nachtangriff befreien sie das Junge und vertreiben Schlitzer und seine Gefolgsleute endgültig aus dem Wald. Nach diesem Triumph versammeln sich die Katzen bei den Vier Bäumen, und die Geister ihrer verstorbenen Freunde erscheinen als leuchtender SternenClan am Nachthimmel. Sie übergeben den fünf Anführern die heilige Botschaft, fünf eigenständige Clans zu gründen und nach dem Gesetz der Krieger zu leben. Kurz darauf spürt der schwerkranke Grauer Flug, dass seine Zeit gekommen ist, und gibt den fünf Gruppen kurz vor seinem Tod ihre ewigen Namen: DonnerClan, SchattenClan, WindClan, FlussClan und WolkenClan."
+            },
+
+            // ======================== STAFFEL 6: VISION VON SCHATTEN ========================
+            {
+                id: "s6-b1",
+                seasonId: "staffel-6",
+                seasonName: "Staffel 6: Vision von Schatten",
+                volume: "Band 1",
+                releaseOrder: "Erscheinungsjahr 2016 (DE: 2018)",
+                title: "Die Mission des Schülers",
+                characters: ["Erlenpfote", "Funkelpfote", "Brombeerstern", "Eichhornschweif", "Zweigjunges", "Veilchenjunges"],
+                summary: "Viele Monde nach der großen Schlacht gegen den Wald der Finsternis erhält der junge DonnerClan-Schüler Erlenpfote – der Sohn von Brombeerstern und Eichhornschweif – eine rätselhafte Vision vom SternenClan. Er soll in der tiefen Schlucht nach dem verschollenen fünften Clan, dem WolkenClan, suchen, um die drohende Dunkelheit am See abzuwenden. Obwohl Erlenpfote zunächst als Kriegerschüler scheitert, findet er bei Häherfeder und Blattsee seine wahre Berufung als Heilerschüler. Gemeinsam mit seiner Schwester Funkelpfote, Sandsturm und weiteren Kriegern bricht er auf die weite Reise in die Schlucht auf. Dort erwartet sie jedoch ein Schock: Der grausame Streuner Dunkelschweif hat mit seiner Bande namens „Die Familie“ den WolkenClan aus seiner Heimat vertrieben, und Sandsturm stirbt unterwegs an einer infizierten Wunde. Auf dem Rückweg finden Erlenpfote und Nadelpfote vom SchattenClan zwei verwaiste Junge in einem Tunnel unter dem Donnerweg. Sie bringen die beiden Kleinen an den See, wo Zweigjunges im DonnerClan und Veilchenjunges im SchattenClan aufwächst."
+            },
+            {
+                id: "s6-b2",
+                seasonId: "staffel-6",
+                seasonName: "Staffel 6: Vision von Schatten",
+                volume: "Band 2",
+                releaseOrder: "Erscheinungsjahr 2016 (DE: 2019)",
+                title: "Donner und Schatten",
+                characters: ["Zweigpfote", "Veilchenpfote", "Erlenpfote", "Dunkelschweif", "Nadelpfote", "Eschenstern"],
+                summary: "Die beiden Schwestern Zweigpfote und Veilchenpfote leiden sehr unter ihrer Trennung in zwei verschiedene Clans, während im SchattenClan die Autorität von Anführer Eschenstern immer mehr zerfällt. Unzufriedene SchattenClan-Schüler – darunter Nadelpfote – lassen sich von der Freiheit der Streuner anstecken und laufen zu Dunkelschweifs „Familie“ über, die sich inzwischen am See niedergelassen hat. Als im SchattenClan eine verheerende Epidemie des Gelben Hustens ausbricht und nur im DonnerClan das nötige Lungenkraut wächst, weigert sich Eschenstern aus Stolz, um Hilfe zu bitten. Schließlich übernehmen Dunkelschweif und seine Streuner mit Unterstützung der abtrünnigen SchattenClan-Katzen gewaltsam die Kontrolle über das Lager des SchattenClans. Eschenstern und die wenigen treuen Krieger werden vertrieben und müssen ausgerechnet beim DonnerClan Zuflucht suchen. Veilchenpfote bleibt im besetzten SchattenClan zurück und muss miterleben, wie Dunkelschweif ein Schreckensregiment errichtet. Unterdessen macht sich Zweigpfote allein auf die Suche nach dem verschollenen WolkenClan, in der Hoffnung, dort ihre wahren Eltern zu finden."
+            },
+            {
+                id: "s6-b3",
+                seasonId: "staffel-6",
+                seasonName: "Staffel 6: Vision von Schatten",
+                volume: "Band 3",
+                releaseOrder: "Erscheinungsjahr 2017 (DE: 2019)",
+                title: "Zerrissene Wolken",
+                characters: ["Veilchenpfote", "Zweigpfote", "Erlenherz", "Dunkelschweif", "Nadelschweif", "Habichtschwinge"],
+                summary: "Dunkelschweif hat nun sowohl den SchattenClan als auch den FlussClan unter seine grausame Herrschaft gebracht und zwingt die gefangenen Krieger zu unmenschlichen Prüfungen. Als der WindClan-Anführer Kurzbart die Grenzen seines Territoriums schließt und die anderen Clans im Stich lässt, scheitert ein erster Befreiungsversuch kläglich. Veilchenpfote versucht im Geheimen, Dunkelschweif zu sabotieren, doch als ihr Verrat auffliegt, wird sie zum Tode verurteilt. Im letzten Moment opfert sich ihre Freundin Nadelschweif im Wasser des Sees, damit Veilchenpfote entkommen und die Clans warnen kann. Zur gleichen Zeit wird Zweigpfote auf ihrer Suche nach dem WolkenClan von einem Streuner gefangen genommen, aber von einer Patrouille des umherirrenden WolkenClans unter Habichtschwinge befreit. Es stellt sich heraus, dass Zweigpfote und Veilchenpfote tatsächlich geborene WolkenClan-Katzen sind und Habichtschwinge ihr leiblicher Vater ist. Gemeinsam mit den Überlebenden des WolkenClans kehrt Zweigpfote an den See zurück, um den anderen Clans im Kampf beizustehen."
+            },
+            {
+                id: "s6-b4",
+                seasonId: "staffel-6",
+                seasonName: "Staffel 6: Vision von Schatten",
+                volume: "Band 4",
+                releaseOrder: "Erscheinungsjahr 2017 (DE: 2019)",
+                title: "Dunkelste Nacht",
+                characters: ["Erlenherz", "Zweigpfote", "Veilchenpfote", "Kurzbart", "Dunkelschweif", "Blattstern"],
+                summary: "Mit der Ankunft des WolkenClans am See schöpfen die geschwächten Clans neue Hoffnung, doch Dunkelschweif hält weiterhin viele Krieger als Geiseln gefangen. Als schließlich auch der WindClan-Anführer Kurzbart sein Schweigen bricht und gesteht, dass Dunkelschweif sein eigener, einst verstoßener Sohn ist, schließt sich der WindClan dem Bündnis an. In einer gewaltigen Entscheidungsschlacht am Seeufer stellen sich alle fünf Clans gemeinsam Dunkelschweifs Streunerarmee entgegen. Kurzbart stellt sich seinem Sohn im Zweikampf im tiefen Wasser des Sees, und beide ertrinken gemeinsam, wodurch die Schreckensherrschaft der Familie endgültig beendet wird. Nach dem Sieg kehren die überlebenden FlussClan- und SchattenClan-Katzen in ihre Lager zurück, während der WolkenClan auf einem freien Waldstück am See ein neues Zuhause findet. Doch der Frieden bleibt brüchig, denn der SchattenClan ist durch den Verlust vieler Krieger so geschwächt, dass er kaum noch allein überleben kann. Zudem stehen Zweigpfote und Veilchenpfote vor der schmerzhaften Frage, zu welchem Clan sie wirklich gehören wollen."
+            },
+            {
+                id: "s6-b5",
+                seasonId: "staffel-6",
+                seasonName: "Staffel 6: Vision von Schatten",
+                volume: "Band 5",
+                releaseOrder: "Erscheinungsjahr 2018 (DE: 2020)",
+                title: "Fluss aus Feuer",
+                characters: ["Zweigblatt", "Veilchenglanz", "Erlenherz", "Tigerherz", "Taubenflug", "Eschenstern"],
+                summary: "Der völlig geschwächte SchattenClan sieht keinen anderen Ausweg mehr, als sich vorübergehend aufzulösen und in den WolkenClan einzugliedern, was die Grenzaufteilung am See erneut durcheinanderbringt. Zweigpfote wechselt zunächst in den WolkenClan zu ihrem Vater Habichtschwinge, merkt aber bald, dass ihr Herz für den DonnerClan und ihren Gefährten Flossenpfote schlägt, und wird dort zur Kriegerin Zweigblatt. Ihre Schwester Veilchenglanz hingegen findet im WolkenClan bei Baum ihr neues Glück und gründet dort eine eigene Familie. Gleichzeitig bricht im Lager des DonnerClans während eines schweren Gewitters ein verheerender Brand aus, und der FlussClan schottet sich aus Angst vor weiteren Verlusten komplett von den anderen Clans ab. Inzwischen kehrt Tigerherz, der gemeinsam mit der hochschwangeren Taubenflug auf der Suche nach einem neuen Weg verschwunden war, mit seinen neugeborenen Jungen an den See zurück. Da Eschenstern bei dem letzten Kampf gegen Streuner ums Leben gekommen ist, reist Tigerherz zum Mondsee und wird als Tigerstern zum neuen Anführer des SchattenClans."
+            },
+            {
+                id: "s6-b6",
+                seasonId: "staffel-6",
+                seasonName: "Staffel 6: Vision von Schatten",
+                volume: "Band 6",
+                releaseOrder: "Erscheinungsjahr 2018 (DE: 2020)",
+                title: "Wütender Sturm",
+                characters: ["Erlenherz", "Zweigblatt", "Veilchenglanz", "Tigerstern", "Blattstern", "Brombeerstern"],
+                summary: "Unter der Führung des neuen Anführers Tigerstern erwacht der SchattenClan zu neuer Stärke, fordert aber sofort sein altes Territorium vom WolkenClan zurück. Die Anführer am See geraten in einen erbitterten Streit über die Grenzen, und viele verlangen, dass der WolkenClan den See wieder verlässt und in die Schlucht zurückkehrt. Während Erlenherz verzweifelt versucht, eine schwer verletzte Kriegerin mit seltenen Kräutern zu retten, zieht ein Jahrhundertsturm mit sintflutartigem Regen über den See hinweg. Der WolkenClan gibt dem Druck der anderen Clans schließlich nach und macht sich mitten im aufziehenden Unwetter auf den Weg fort vom See. Doch als die Wassermassen die Lager überfluten und Jungen des SchattenClans in den reißenden Fluten treiben, kehren die WolkenClan-Katzen selbstlos um und retten sie. Durch diese selbstlose Tat erkennen alle Anführer endgültig, dass der SternenClan fünf Clans am See vorgesehen hat. Die Grenzen werden neu geordnet, und der WolkenClan erhält dauerhaft seinen rechtmäßigen Platz im Kreis der Clans."
+            },
+
+            // ======================== STAFFEL 7: DAS GEBROCHENE GESETZ ========================
+            {
+                id: "s7-b1",
+                seasonId: "staffel-7",
+                seasonName: "Staffel 7: Das gebrochene Gesetz",
+                volume: "Band 1",
+                releaseOrder: "Erscheinungsjahr 2019 (DE: 2020)",
+                title: "Verlorene Sterne",
+                characters: ["Wurzelpfote", "Stachelpfote", "Schattenpfote", "Brombeerstern", "Baum", "Eichhornschweif"],
+                summary: "Als eine außergewöhnlich harte Blattleere über den See hereinbricht, friert der heilige Mondsee plötzlich vollständig zu, und die Heiler verlieren jeden Kontakt zum SternenClan. Drei junge Katzen aus verschiedenen Clans geraten in das Zentrum der mysteriösen Ereignisse: der WolkenClan-Schüler Wurzelpfote, die ehrgeizige DonnerClan-Schülerin Stachelpfote und der junge SchattenClan-Heilerschüler Schattenpfote. Schattenpfote wird von quälenden Visionen geplagt, die ihm einflüstern, dass die Clans nur gerettet werden können, wenn alle Gesetzesbrecher hart bestraft werden. Zur gleichen Zeit erkrankt der DonnerClan-Anführer Brombeerstern schwer und verliert sein Leben, während Schattenpfote versucht, ihn mit einer gefährlichen Kältetherapie zu heilen. Zwar erwacht Brombeerstern scheinbar wieder zum Leben, doch er verhält sich plötzlich kalt, grausam und völlig verändert. Nur der junge Wurzelpfote, der von seinem Vater Baum die Gabe geerbt hat, Geister zu sehen, erkennt das unfassbare Geheimnis: Der echte Geist von Brombeerstern wandelt als verzweifeltes Gespenst außerhalb seines Körpers umher."
+            },
+            {
+                id: "s7-b2",
+                seasonId: "staffel-7",
+                seasonName: "Staffel 7: Das gebrochene Gesetz",
+                volume: "Band 2",
+                releaseOrder: "Erscheinungsjahr 2019 (DE: 2021)",
+                title: "Eisiges Schweigen",
+                characters: ["Wurzelpfote", "Stachelherz", "Schattenpfote", "Brombeerstern (Betrüger)", "Eichhornschweif", "Stachelpfote"],
+                summary: "Der Betrüger in Brombeersterns Körper übernimmt mit eiserner Hand die Führung im DonnerClan und zwingt die Krieger, sogenannte „Gesetzesbrecher“ im eigenen Clan zu demütigen und zu bestrafen. Stachelpfote, die gerade zur Kriegerin Stachelherz ernannt wurde, hält zunächst aus Loyalität zu ihrem Anführer, beginnt aber bald an seinen grausamen Befehlen zu zweifeln. Schattenpfote wird unterdessen von seiner geheimnisvollen Traumstimme dazu verleitet, einen schrecklichen Anschlag auf sein eigenes Leben zu überleben, nur um zu erkennen, dass die Stimme ihn von Anfang an belogen hat. Währenddessen versucht Wurzelpfote verzweifelt, die anderen Clans davon zu überzeugen, dass ein fremder Geist Brombeersterns Körper gestohlen hat. Als der Betrüger schließlich Eichhornschweif und weitere treue Krieger aus dem DonnerClan verbannt, formiert sich im Geheimen eine Widerstandsbewegung aus Katzen aller fünf Clans. In einem mutigen Einsatz gelingt es Wurzelpfote und den Rebellen, den Geist des echten Brombeerstern vor den anderen Katzen sichtbar zu machen und den Betrüger zu entlarven."
+            },
+            {
+                id: "s7-b3",
+                seasonId: "staffel-7",
+                seasonName: "Staffel 7: Das gebrochene Gesetz",
+                volume: "Band 3",
+                releaseOrder: "Erscheinungsjahr 2020 (DE: 2021)",
+                title: "Schleier aus Schatten",
+                characters: ["Stachelherz", "Wurzelquell", "Schattenhelle", "Eichhornschweif", "Aschenpelz", "Tigerstern"],
+                summary: "Der Betrüger ist entlarvt, doch der echte Brombeerstern ist weiterhin von seinem Körper getrennt, während der falsche Anführer den DonnerClan in einen blutigen Krieg gegen die Rebellen treibt. Stachelherz arbeitet im Geheimen als Spionin im Lager des DonnerClans, um Eichhornschweif und den verbannten Kriegern wertvolle Informationen zuzuspielen. In einer großen Entscheidungsschlacht zwischen den loyalen Anhängern des Betrügers und den vereinten Rebellen aller Clans wird der falsche Anführer schließlich überwältigt und im SchattenClan gefangen gesetzt. Erst jetzt enthüllt der Gefangene seine wahre Identität: Es ist Aschenpelz, der aus dem SternenClan zurückgekehrt ist, um sich aus besessener Liebe an Eichhornschweif zu rächen. Schattenhelle, der inzwischen seinen Heilernamen erhalten hat, erkennt voller Scham, dass es Aschenpelz war, der ihn in seinen Visionen manipuliert hat. Als auch noch der Geist des echten Brombeerstern spurlos verschwindet, stürzt der DonnerClan in tiefe Verzweiflung."
+            },
+            {
+                id: "s7-b4",
+                seasonId: "staffel-7",
+                seasonName: "Staffel 7: Das gebrochene Gesetz",
+                volume: "Band 4",
+                releaseOrder: "Erscheinungsjahr 2020 (DE: 2022)",
+                title: "Finsternis im Inneren",
+                characters: ["Wurzelquell", "Stachelherz", "Schattenhelle", "Eichhornschweif", "Aschenpelz", "Graustreif"],
+                summary: "Nach der Gefangennahme von Aschenpelz herrscht Ratlosigkeit am See, denn der Mondsee bleibt stumm und niemand weiß, wie der echte Brombeerstern zurückgeholt werden kann. Die fünf Clans streiten erbittert darüber, ob man Aschenpelz hinrichten sollte, doch Eichhornschweif fürchtet, dass damit auch Brombeersterns Körper und Geist für immer verloren wären. Wurzelquell, der inzwischen seine tiefen Gefühle für Stachelherz entdeckt hat, versucht zusammen mit den Geistern verstorbener Krieger einen Weg ins Jenseits zu finden. Als Schattenhelle bei einem nächtlichen Verhör versucht, Informationen aus Aschenpelz herauszulocken, zieht der listige Gefangene ihn in eine Falle und entkommt. Auf seiner Flucht packt Aschenpelz die verzweifelte Eichhornschweif und stürzt sich mit ihr zusammen in die dunklen Tiefen des Mondsees. Beide verschwinden spurlos im Wasser – direkt hinab in den Wald der Finsternis."
+            },
+            {
+                id: "s7-b5",
+                seasonId: "staffel-7",
+                seasonName: "Staffel 7: Das gebrochene Gesetz",
+                volume: "Band 5",
+                releaseOrder: "Erscheinungsjahr 2021 (DE: 2022)",
+                title: "Ort ohne Sterne",
+                characters: ["Schattenhelle", "Wurzelquell", "Stachelherz", "Eichhornschweif", "Brombeerstern", "Aschenpelz"],
+                summary: "Schattenhelle entdeckt, dass er durch seine besondere Verbindung zu Aschenpelz seinen eigenen Geist in den Wald der Finsternis projizieren kann. Dort stellt er fest, dass Aschenpelz die Barriere zum SternenClan blockiert und sowohl Eichhornschweif als auch den geschwächten Geist von Brombeerstern gefangen hält. Noch schlimmer: Aschenpelz hat die Kontrolle über die verlorenen Geister der jüngst verstorbenen Clan-Katzen übernommen und zwingt sie, für ihn zu kämpfen. Um ihre gefangenen Anführer und die verstorbenen Gefährten zu befreien, wagen Wurzelquell, Stachelherz und weitere mutige Krieger eine beispiellose Rettungsmission. Sie tauchen lebendig in die wirbelnden Wasser des Mondsees ein und betreten mit Körper und Seele den Wald der Finsternis. In dieser trostlosen Schattenwelt müssen sie sich nicht nur Aschenpelz' versklavten Geistern stellen, sondern auch verhindern, dass die Finsternis den gesamten SternenClan verschlingt."
+            },
+            {
+                id: "s7-b6",
+                seasonId: "staffel-7",
+                seasonName: "Staffel 7: Das gebrochene Gesetz",
+                volume: "Band 6",
+                releaseOrder: "Erscheinungsjahr 2021 (DE: 2023)",
+                title: "Licht im Nebel",
+                characters: ["Wurzelquell", "Stachelherz", "Schattenhelle", "Brombeerstern", "Eichhornschweif", "Aschenpelz"],
+                summary: "Tief im Wald der Finsternis führen Wurzelquell, Stachelherz und Schattenhelle einen verzweifelten Kampf gegen Aschenpelz und die finsteren Nebel, die den SternenClan zu vernichten drohen. Mit Hilfe tapferer Geister wie Schneeschopf und der mutigen Hilfe von Häherfeder und Blattsee gelingt es ihnen, Eichhornschweif und Brombeerstern zu befreien. In der finalen Auseinandersetzung am schwarzen Wasser droht Aschenpelz, Wurzelquell in die Tiefe zu ziehen und für immer auszulöschen. Im letzten Augenblick stürzt sich Stachelherz voller Liebe auf Aschenpelz und reißt ihn mit sich in das dunkle Wasser, wodurch Aschenpelz endgültig vernichtet wird – doch auch Stachelherz löst sich im Nichts auf. Brombeersterns Geist kehrt sicher in seinen Körper zurück, und die Verbindung zwischen den Clans und dem SternenClan ist endlich wiederhergestellt. Tief erschüttert von Stachelherz' Opfer erkennen die fünf Anführer, dass das Gesetz der Krieger geändert werden muss, damit Katzen über Clan-Grenzen hinweg lieben dürfen."
+            },
+
+            // ======================== STAFFEL 8: EIN STERNENLOSER CLAN ========================
+            {
+                id: "s8-b1",
+                seasonId: "staffel-8",
+                seasonName: "Staffel 8: Ein sternenloser Clan",
+                volume: "Band 1",
+                releaseOrder: "Erscheinungsjahr 2022 (DE: 2023)",
+                title: "Fluss",
+                characters: ["Frostpfote", "Flammenpfote (Nachtherz)", "Sonnenstrahl", "Nebelstern", "Schilfbart", "Spritzschweif"],
+                summary: "Nach der großen Schlacht im Wald der Finsternis überarbeiten die fünf Anführer das Gesetz der Krieger, sodass Katzen nun offiziell den Clan wechseln dürfen, um bei ihrem Gefährten zu leben. Im DonnerClan kämpft der junge Kater Flammenpfote unterdessen mit dem gewaltigen Schatten seines berühmten Vorfahren Feuerstern, weshalb er bei seiner Kriegerprüfung absichtlich scheitert. Im SchattenClan versucht die junge Kriegerin Sonnenstrahl, ihre verbotene Liebe zu dem Clan-Kameraden Lichtsprung zu retten, muss aber zusehen, wie er sich für ihre beste Freundin entscheidet. Gleichzeitig erlebt der FlussClan die größte Katastrophe seiner Geschichte: Zuerst stirbt die langjährige Anführerin Nebelstern unerwartet mitten in einem Streit, und kurz darauf wird auch der Zweite Anführer Schilfbart tot aufgefunden. Plötzlich steht der FlussClan ohne Anführer, ohne Stellvertreter und ohne erfahrenen Heiler da, da auch Mottenflügel nicht mit dem SternenClan sprechen kann. Alle Hoffnungen ruhen nun auf der jungen Heilerschülerin Frostpfote, die behauptet, ein Zeichen vom SternenClan für die nächste Anführerin empfangen zu haben."
+            },
+            {
+                id: "s8-b2",
+                seasonId: "staffel-8",
+                seasonName: "Staffel 8: Ein sternenloser Clan",
+                volume: "Band 2",
+                releaseOrder: "Erscheinungsjahr 2022 (DE: 2024)",
+                title: "Himmel",
+                characters: ["Nachtherz", "Sonnenstrahl", "Frostpfote", "Tigerstern", "Krausfeder", "Spritzschweif"],
+                summary: "Im DonnerClan legt Flammenpfote seinen alten Namen ab, besteht seine zweite Kriegerprüfung und wählt stolz den neuen Namen Nachtherz, um seinen eigenen Weg zu gehen. Im führungslosen FlussClan versucht Frostpfote unterdessen, den Clan durch ihre Visionen zu lenken, doch ihre erste Wahl für die Anführerschaft erweist sich als Fehlentscheidung und sorgt für Chaos. Auch ihr zweiter Vorschlag scheitert tragisch, als die frisch ernannte Kandidatin kurz vor der Reise zum Mondsee ums Leben kommt. Der SchattenClan-Anführer Tigerstern nutzt die Führungskrise im FlussClan aus und besetzt das Territorium des FlussClans mit seinen Kriegern, um dort angeblich für Ordnung zu sorgen. Währenddessen trifft Nachtherz auf der Großen Versammlung die unglückliche SchattenClan-Kriegerin Sonnenstrahl, und zwischen den beiden entwickelt sich eine tiefe Freundschaft. Als Tigerstern die Einmischung von Nachtherz bemerkt und Sonnenstrahl im SchattenClan unter Druck setzt, wächst die Spannung zwischen den Clans gefährlich an. Frostpfote beginnt derweil zu zweifeln, ob ihre Visionen wirklich vom SternenClan stammen oder ob jemand sie manipuliert."
+            },
+            {
+                id: "s8-b3",
+                seasonId: "staffel-8",
+                seasonName: "Staffel 8: Ein sternenloser Clan",
+                volume: "Band 3",
+                releaseOrder: "Erscheinungsjahr 2023 (DE: 2024)",
+                title: "Schatten",
+                characters: ["Nachtherz", "Sonnenstrahl", "Frostpfote", "Tigerstern", "Beerenherz", "Spritzschweif"],
+                summary: "Nachtherz wagt den mutigen Schritt und wechselt offiziell in den SchattenClan, um dort an der Seite von Sonnenstrahl ein neues Leben zu beginnen. Doch im SchattenClan schlägt ihm offenes Misstrauen entgegen, besonders von Sonnenstrahls eigener Mutter Beerenherz, die die neuen Clan-Regeln zutiefst verabscheut. Um im SchattenClan anerkannt zu werden, muss Nachtherz harte Prüfungen bestehen, während Sonnenstrahl erkennt, dass ihre eigene Familie immer verbitterter wird. Gleichzeitig versucht Frostpfote im besetzten FlussClan, sich aus den politischen Machtspielen zurückzuziehen, erhält aber plötzlich wieder echte, verstörende Träume. Bei einer heimlichen Reise zum Mondsee findet Frostpfote eine graue Feder und erkennt die schreckliche Wahrheit: Schilfbart ist nicht durch einen Unfall gestorben, sondern wurde kaltblütig ermordet. Als Frostpfote den wahren Mörder im eigenen Clan durchschaut und auf dem Weg zum Mondsee davonlaufen will, wird sie aus dem Hinterhalt angegriffen und schwer verletzt zurückgelassen."
+            },
+            {
+                id: "s8-b4",
+                seasonId: "staffel-8",
+                seasonName: "Staffel 8: Ein sternenloser Clan",
+                volume: "Band 4",
+                releaseOrder: "Erscheinungsjahr 2023 (DE: 2025)",
+                title: "Donner",
+                characters: ["Frostpfote", "Nachtherz", "Sonnenstrahl", "Brombeerstern", "Eichhornstern", "Spritzschweif"],
+                summary: "Schwer verletzt und dem Tode nahe wird Frostpfote abseits des Sees von freundlichen Parkkatzen gefunden und gesund gepflegt. Dort lernt sie zu meditieren, erkennt, dass sie gar keine echte Heilerin ist, und entlarvt endgültig den wahren Drahtzieher hinter dem Mord an Schilfbart: den FlussClan-Krieger Spritzschweif. Unterdessen kehrt Nachtherz zusammen mit Sonnenstrahl in den DonnerClan zurück, wo Sonnenstrahl nun ihre harten Prüfungen für den Clanwechsel ablegen muss. Im DonnerClan steht zudem ein historischer Wandel bevor, als der schwer traumatisierte Brombeerstern sein Amt als Anführer niederlegt und Eichhornschweif als Eichhornstern seine Nachfolge antritt. Kurz darauf machen sich Nachtherz und Sonnenstrahl auf die Suche nach der verschwundenen Frostpfote und finden sie schließlich im Park. Gemeinsam treten sie die Rückreise zum See an, doch im FlussClan hat Spritzschweif die Macht bereits an sich gerissen und behauptet, seine neun Leben vom SternenClan erhalten zu haben."
+            },
+            {
+                id: "s8-b5",
+                seasonId: "staffel-8",
+                seasonName: "Staffel 8: Ein sternenloser Clan",
+                volume: "Band 5",
+                releaseOrder: "Erscheinungsjahr 2024 (DE: 2025)",
+                title: "Wind",
+                characters: ["Frostpfote", "Nachtherz", "Sonnenstrahl", "Spritzschweif", "Hasenstern", "Eichhornstern"],
+                summary: "Zurück am See warnen Frostpfote, Nachtherz und Sonnenstrahl die anderen Anführer vor Spritzschweif, doch die Beweise gegen den falschen FlussClan-Anführer sind zunächst schwer zu vermitteln. Spritzschweif regiert den FlussClan mit wachsender Grausamkeit, verbannt treue Krieger wie Dämmerfell und schmiedet ein geheimes Bündnis mit der verbannten SchattenClan-Katze Beerenherz. Als der WindClan-Anführer Hasenstern Zweifel an Spritzschweifs Behauptungen äußert, schlägt Spritzschweif hinterhältig zu und lockt Hasenstern in eine tödliche Falle, bei der dieser ein Leben verliert. Frostpfote nutzt ihre neu erlernte Meditationsgabe, um tief in die Verbindung zum SternenClan einzutauchen und den anderen Clans die Wahrheit zu zeigen. Gleichzeitig kämpfen Nachtherz und Sonnenstrahl im DonnerClan um ihre endgültige Aufnahme und decken Beerenherz' finstere Machenschaften auf. Am See braut sich ein offener Krieg zusammen, denn Spritzschweif ist bereit, jeden zu vernichten, der sich ihm in den Weg stellt."
+            },
+            {
+                id: "s8-b6",
+                seasonId: "staffel-8",
+                seasonName: "Staffel 8: Ein sternenloser Clan",
+                volume: "Band 6",
+                releaseOrder: "Erscheinungsjahr 2024 (DE: 2026)",
+                title: "Stern",
+                characters: ["Frostpfote", "Nachtherz", "Sonnenstrahl", "Spritzschweif", "Eichhornstern", "Tigerstern"],
+                summary: "Spritzschweif entfesselt mit Hilfe von Beerenherz und abtrünnigen Kriegern einen verheerenden Angriff auf den DonnerClan und den SchattenClan, um seine Vorherrschaft am See zu erzwingen. In einer dramatischen Schlacht stellen sich die vereinten Krieger dem skrupellosen Usurpator entgegen, wobei Beerenherz für ihren Verrat fällt und Spritzschweif schließlich im Zweikampf besiegt wird. Doch die wahre Heilung für den zerrissenen FlussClan kann nur vom SternenClan selbst kommen. Frostpfote reist zum Mondsee und führt die verunsicherten FlussClan-Katzen zu einer wahren Begegnung mit ihren Ahnen. Dort offenbart der SternenClan, dass Frostpfote nie dazu bestimmt war, Heilerin zu sein, sondern die wahre neue Anführerin des FlussClans ist. Frostpfote empfängt ihre neun Leben, erhält den stolzen Anführernamen Froststern und schenkt dem FlussClan endlich wieder Frieden und Hoffnung. Auch Nachtherz und Sonnenstrahl finden als vollwertige Krieger im DonnerClan ihr dauerhaftes Glück."
+            },
+
+            // ======================== SPECIAL ADVENTURES ========================
+            {
+                id: "sp-1",
+                seasonId: "special",
+                seasonName: "Special Adventure",
+                volume: "Special 1",
+                releaseOrder: "Zeitlich zwischen Staffel 1 & 2",
+                title: "Feuersterns Mission",
+                characters: ["Feuerstern", "Sandsturm", "Wolkenstern", "Blattstern", "Scharfkralle", "Himmelstern"],
+                summary: "Nach dem Sieg über den BlutClan wird Feuerstern von rätselhaften Träumen über unbekannte, verzweifelte Katzen heimgesucht. Am Mondstein erfährt er von den verstorbenen WolkenClan-Katzen Wolkenstern und Vogelwolke ein dunkles Geheimnis aus der Vergangenheit des Waldes: Einst gab es fünf Clans im Wald, doch als Zweibeiner das Territorium des WolkenClans zerstörten, verweigerten die anderen vier Clans ihm ein neues Stück Land und vertrieben ihn. Geplagt von Schuldgefühlen bricht Feuerstern gemeinsam mit seiner Gefährtin Sandsturm auf eine weite Reise flussaufwärts auf, um den vergessenen fünften Clan wieder aufzubauen. In einer tiefen Felsenschlucht finden sie schließlich Nachkommen des alten WolkenClans sowie mutige Hauskätzchen und Streuner, die sich ihnen anschließen. Feuerstern und Sandsturm lehren diese neuen Katzen das Gesetz der Krieger, Jagdtechniken und den Glauben an den SternenClan. Nachdem sie gemeinsam eine gefährliche Rattenplage in der Schlucht besiegt haben, ernennt Feuerstern die tapfere Blattstern zur neuen Anführerin des wiedergeborenen WolkenClans."
+            },
+            {
+                id: "sp-2",
+                seasonId: "special",
+                seasonName: "Special Adventure",
+                volume: "Special 2",
+                releaseOrder: "Vorgeschichte zu Staffel 1",
+                title: "Blausterns Prophezeiung",
+                characters: ["Blaupelz (Blaustern)", "Schneepelz", "Eichenherz", "Stachelkralle", "Gänsefeder", "Sonnenstern"],
+                summary: "Dieser Band erzählt die bewegende Lebensgeschichte von Blaustern, von ihrer unbeschwerten Kindheit als Blaujunges im DonnerClan bis zu ihrem Aufstieg zur legendären Anführerin. Schon als junge Schülerin erhält sie vom exzentrischen Heiler Gänsefeder eine verhängnisvolle Prophezeiung: Sie sei wie ein loderndes Feuer, das durch den Wald fegt, doch das Wasser werde sie eines Tages zerstören. Nach dem frühen Tod ihrer Mutter Mondblüte und dem tragischen Unfall ihrer geliebten Schwester Schneepelz auf dem Donnerweg stürzt Blaupelz in tiefe Trauer. Heimlich verliebt sie sich in den edlen FlussClan-Krieger Eichenherz und bringt drei gemeinsame Junge zur Welt: Nebeljunges, Steinjunges und Moosjunges. Als jedoch der grausame Stachelkralle droht, Zweiter Anführer des DonnerClans zu werden und den Clan in blutige Kriege zu stürzen, trifft Blaupelz die schwerste Entscheidung ihres Lebens. Um den Clan vor Stachelkralle zu retten, gibt sie ihre eigenen Jungen mitten in der eisigen Blattleere an Eichenherz im FlussClan ab – wobei die kleine Moosjunges im Schnee erfriert. Durch dieses herzzerreißende Opfer wird Blaupelz zur Stellvertreterin und schließlich zur weisen Anführerin Blaustern."
+            },
+            {
+                id: "sp-3",
+                seasonId: "special",
+                seasonName: "Special Adventure",
+                volume: "Special 3",
+                releaseOrder: "Vorgeschichte zu Staffel 1",
+                title: "Gelbzahns Geheimnis",
+                characters: ["Gelbzahn", "Zackenstern", "Braunstern", "Salbeibart", "Fuchsherz", "Fetzenstern"],
+                summary: "Im SchattenClan wächst die temperamentvolle Gelbpfote als begabte, mutige Kriegerin heran und verliebt sich heimlich in ihren Clan-Kameraden Fetzenpelz. Doch schon bald entdeckt Gelbzahn eine außergewöhnliche, aber schmerzhafte Gabe: Sie spürt die körperlichen Schmerzen anderer Katzen am eigenen Leib. Der alte SchattenClan-Heiler Salbeibart überzeugt sie davon, dass sie wegen dieser Fähigkeit dazu bestimmt ist, Heilerin zu werden und ihre Kriegerlaufbahn aufzugeben. Schweren Herzens tritt Gelbzahn in den Dienst des SternenClans, stellt jedoch kurz darauf entsetzt fest, dass sie von Fetzenpelz trächtig ist. Heimlich bringt sie ihre Jungen zur Welt, von denen nur ein einziger kleiner Kater überlebt – Braunstern –, den sie in die Obhut einer anderen Königin gibt. Aus Zorn über seine eigene Kindheit und mit unbändiger Grausamkeit wächst Braunstern zu einem skrupellosen Krieger heran, tötet seinen eigenen Vater Fetzenstern und reißt die Führung an sich. Schließlich schiebt Braunstern seiner eigenen Mutter Gelbzahn den Mord an jungen Clan-Schülern in die Schuhe und verjagt sie aus dem SchattenClan."
+            },
+            {
+                id: "sp-4",
+                seasonId: "special",
+                seasonName: "Special Adventure",
+                volume: "Special 4",
+                releaseOrder: "Vorgeschichte zu Staffel 1",
+                title: "Streifensterns Bestimmung",
+                characters: ["Streifenstern (Schiefmaul)", "Eichenherz", "Ahörnschatten", "Weidenbrise", "Nebelstern", "Steinfell"],
+                summary: "Als mutiges junges FlussClan-Kätzchen stürzt Sturmjunges bei einem Ausflug zu den Sonnenfelsen auf einen spitzen Stein und bricht sich schwer den Kiefer, wodurch sein Maul für immer schief bleibt. Von seiner eigenen Mutter Regenfell verstoßen und verächtlich in Schiefjunges umbenannt, sucht der junge Kater verzweifelt nach Anerkennung und Stärke. In seinen Träumen erscheint ihm die rachsüchtige Geist-Kätzin Ahörnschatten aus dem Wald der Finsternis, gibt sich als SternenClan-Katze aus und verspricht ihm Größe und Ruhm, wenn er seinen Clan über alles andere stellt. Durch hartes Training wird Schiefmaul schließlich zum Zweiten Anführer und später zum Anführer Streifenstern des FlussClans. Doch Ahörnschattens Versprechen entpuppt sich als grausamer Fluch, denn nacheinander sterben alle Katzen, die Streifenstern liebt – darunter seine geliebte Gefährtin Weidenbrise und zwei ihrer drei gemeinsamen Jungen. Erst als sein Bruder Eichenherz die geheimen Kinder von Blaupelz in den FlussClan bringt, erkennt Streifenstern Ahörnschattens wahre Absicht. Er weigert sich, die unschuldigen Jungen zu verstoßen, überwindet seinen Schmerz und wird zu einem der weisesten Anführer des FlussClans."
+            },
+            {
+                id: "sp-5",
+                seasonId: "special",
+                seasonName: "Special Adventure",
+                volume: "Special 5",
+                releaseOrder: "Vorgeschichte zu Staffel 1",
+                title: "Riesensterns Rache",
+                characters: ["Riesenstern (Riesenschweif)", "Jake", "Sandginster", "Rindenpelz", "Heidestern", "Spatz"],
+                summary: "Im offenen Moorland des WindClans wird Riesenschweif als Sohn der Tunnelgräberin Blaßvogel und des stolzen Moorläufers Sandginster geboren. Als sein Vater bei einem gemeinsamen Tunnel-Einsatz mit dem Hauskater Jake unter einem Erdrutsch ums Leben kommt, gibt Riesenschweif dem Kater Spatz die alleinige Schuld an dem Unglück. Verzehrt von Rachegedanken verlässt Riesenschweif den WindClan, um Spatz in der fernen Zweibeinerstadt aufzuspüren und zu töten. Auf dieser langen Reise schließt er eine tiefe, lebenslange Freundschaft mit dem warmherzigen Hauskater Jake – ausgerechnet dem Vater des späteren Feuerstern. Als Riesenschweif seinen Erzfeind Spatz schließlich findet, erkennt er, dass sein Vater nicht aus Verrat starb, und verschont Spatz im letzten Moment. Geläutert kehrt Riesenschweif in den WindClan zurück, überwindet die alten Rivalitäten zwischen Moorläufern und Tunnelgräbern und steigt schließlich zum geliebten Anführer Riesenstern auf."
+            },
+            {
+                id: "sp-6",
+                seasonId: "special",
+                seasonName: "Special Adventure",
+                volume: "Special 6",
+                releaseOrder: "Zeitlich zwischen Staffel 4 & 6",
+                title: "Brombeersterns Aufstieg",
+                characters: ["Brombeerkralle (Brombeerstern)", "Eichhornschweif", "Jessy", "Feuerstern", "Frankie", "Nebelstern"],
+                summary: "Nach der verheerenden Schlacht gegen den Wald der Finsternis und dem Tod Feuersterns tritt Brombeerkralle als neuer Anführer Brombeerstern ein schweres Erbe an. Während der DonnerClan noch um seine Gefallenen trauert, sucht eine gewaltige Überschwemmung den gesamten See heim und vertreibt den FlussClan und den SchattenClan aus ihren Lagern. Brombeerstern öffnet das höher gelegene Lager des DonnerClans selbstlos für die obdachlosen FlussClan-Katzen, was jedoch innerhalb seines eigenen Clans zu Spannungen führt. Gleichzeitig tauchen mehrere freundliche Hauskätzchen – darunter die mutige Jessy – im Territorium auf und werden von dem überfluteten Wasser eingeschlossen. Brombeerstern rettet sie und fühlt sich zu Jessys unbeschwerter Art hingezogen, was seine ohnehin angespannte Beziehung zu Eichhornschweif auf eine harte Probe stellt. Am Ende erkennt Brombeerstern, dass seine wahre Liebe und Zukunft an der Seite von Eichhornschweif liegt, und beweist sich als würdiger Nachfolger Feuersterns."
+            },
+            {
+                id: "sp-7",
+                seasonId: "special",
+                seasonName: "Special Adventure",
+                volume: "Special 7",
+                releaseOrder: "Zeitlich zwischen Staffel 4 & 6",
+                title: "Krähenfeders Prüfung",
+                characters: ["Krähenfeder", "Nachtwolke", "Windpelz", "Blattsee", "Kurzbart", "Hasensprung"],
+                summary: "Nach dem großen Kampf gegen den Wald der Finsternis leidet der WindClan unter tiefem Misstrauen, weil viele Krieger – darunter Krähenfeders eigener Sohn Windpelz – einst im Wald der Finsternis trainiert haben. Krähenfeder selbst wird von seiner eigenen Familie gemieden, da seine Gefährtin Nachtwolke und Windpelz ihm vorwerfen, sie nie wirklich geliebt zu haben. Als eine aggressive Hermelin-Plage in den unterirdischen Tunneln des WindClans ausbricht und sogar die Jungen bedroht, muss Krähenfeder die Führung im Kampf übernehmen. Während eines Gefechts verschwindet Nachtwolke plötzlich spurlos und wird im Clan für tot gehalten, was Windpelz in tiefe Verzweiflung stürzt. Krähenfeder setzt alles daran, das Vertrauen seines verbitterten Sohnes zurückzugewinnen und gemeinsam mit den anderen Clans die gefährlichen Hermeline endgültig aus den Tunneln zu vertreiben. Schließlich kehrt die totgeglaubte Nachtwolke von einem Zweibeiner-Bau zurück, Krähenfeder versöhnt sich mit Windpelz und wird zum neuen Zweiten Anführer des WindClans ernannt."
+            },
+            {
+                id: "sp-8",
+                seasonId: "special",
+                seasonName: "Special Adventure",
+                volume: "Special 8",
+                releaseOrder: "Zeitlich zwischen Staffel 6 & 7",
+                title: "Eichhornschweifs Hoffnung",
+                characters: ["Eichhornschweif", "Brombeerstern", "Blattsee", "Schwestern (Mondlicht)", "Sonnenaufgang", "Funkelpelz"],
+                summary: "Obwohl die fünf Clans am See endlich wieder in Frieden leben, wünscht sich die DonnerClan-Stellvertreterin Eichhornschweif sehnlichst noch einmal Junge, während Brombeerstern zögert. Gleichzeitig droht ein neuer Grenzkonflikt, weil der WolkenClan auf der Suche nach einem besseren Territorium auf ein abgelegenes Waldgebiet jenseits der Grenzen stößt. Bei einem Erkundungsausflug werden Eichhornschweif und Blattsee von einer geheimnisvollen Gruppe wilder Kätzinnen namens „Die Schwestern“ gefangen genommen. Diese Kätzinnen leben ohne Kater, können mit Geistern sprechen und stehen kurz davor, ihre Jungen in genau dem Gebiet zur Welt zu bringen, das die Clans beanspruchen wollen. Als die anderen Clans einen gewaltsamen Angriff gegen die Schwestern planen, gerät Eichhornschweif in einen erbitterten Konflikt zwischen ihrer Loyalität zu Brombeerstern und ihrem Mitgefühl für die werdenden Mütter. Bei einem Erdrutsch in den Höhlen werden Eichhornschweif und Blattsee schwer verschüttet und reisen bis an die Schwelle des SternenClans. Während Blattsee beschließt, im SternenClan zu bleiben, kehrt Eichhornschweif ins Leben zurück und findet wieder mit Brombeerstern zusammen."
+            }
+        ];
+
+        /* --------------------------------------------------------------------------
+           2. ZUSTANDSVERWALTUNG (Filter, Spoiler-Modus, Lesefortschritt)
+           -------------------------------------------------------------------------- */
+        const STORAGE_KEY_READ = "wc_archiv_read_books_v1";
+        const STORAGE_KEY_CLAN = "wc_archiv_clan_theme_v1";
+
+        let state = {
+            searchQuery: "",
+            seasonFilter: "all",
+            readFilter: "all", // 'all' | 'read' | 'unread'
+            spoilerMode: false,
+            readBooks: new Set(),
+            revealedBooks: new Set(), // Temporär aufgedeckte Bücher im Spoiler-Modus
+            activeModalBookId: null
+        };
+
+        // Gespeicherte Daten aus localStorage laden
+        function loadSavedState() {
+            try {
+                const savedRead = localStorage.getItem(STORAGE_KEY_READ);
+                if (savedRead) {
+                    const parsed = JSON.parse(savedRead);
+                    if (Array.isArray(parsed)) {
+                        state.readBooks = new Set(parsed);
+                    }
+                }
+                const savedClan = localStorage.getItem(STORAGE_KEY_CLAN);
+                if (savedClan) {
+                    setClanTheme(savedClan, false);
+                }
+            } catch (e) {
+                console.warn("LocalStorage konnte nicht geladen werden:", e);
+            }
+        }
+
+        function saveReadState() {
+            try {
+                localStorage.setItem(STORAGE_KEY_READ, JSON.stringify([...state.readBooks]));
+            } catch (e) {
+                console.warn("LocalStorage konnte nicht gespeichert werden:", e);
+            }
+        }
+
+        /* --------------------------------------------------------------------------
+           3. CLAN-FARBTHEMEN UMSCHALTEN
+           -------------------------------------------------------------------------- */
+        function setClanTheme(clanName, showNotification = true) {
+            const root = document.documentElement;
+            if (clanName === "donnerclan") {
+                root.removeAttribute("data-clan");
+            } else {
+                root.setAttribute("data-clan", clanName);
+            }
+
+            document.querySelectorAll(".clan-dot").forEach(dot => {
+                if (dot.dataset.clanBtn === clanName) {
+                    dot.classList.add("ring-2", "ring-white", "scale-110");
+                    dot.classList.remove("opacity-65");
+                } else {
+                    dot.classList.remove("ring-2", "ring-white", "scale-110");
+                    dot.classList.add("opacity-65");
+                }
+            });
+
+            try {
+                localStorage.setItem(STORAGE_KEY_CLAN, clanName);
+            } catch (e) {}
+
+            if (showNotification) {
+                const clanLabels = {
+                    donnerclan: "DonnerClan-Bernstein aktiviert",
+                    flussclan: "FlussClan-Blau aktiviert",
+                    schattenclan: "SchattenClan-Smaragd aktiviert",
+                    windclan: "WindClan-Gold aktiviert",
+                    sternenclan: "SternenClan-Silber & Violett aktiviert"
+                };
+                showToast(clanLabels[clanName] || "Farbthema gewechselt");
+            }
+        }
+
+        /* --------------------------------------------------------------------------
+           4. FILTER, SUCHE & SPOILER-SCHUTZ
+           -------------------------------------------------------------------------- */
+        function getFilteredBooks() {
+            const q = state.searchQuery.trim().toLowerCase();
+
+            return booksDatabase.filter(book => {
+                // Staffel-Filter
+                if (state.seasonFilter !== "all" && book.seasonId !== state.seasonFilter) {
+                    return false;
+                }
+
+                // Lesestatus-Filter
+                const isRead = state.readBooks.has(book.id);
+                if (state.readFilter === "read" && !isRead) return false;
+                if (state.readFilter === "unread" && isRead) return false;
+
+                // Suchbegriff (Titel, Staffel, Band, Charaktere, Zusammenfassung)
+                if (q.length > 0) {
+                    const haystack = [
+                        book.title,
+                        book.seasonName,
+                        book.volume,
+                        book.summary,
+                        ...book.characters
+                    ].join(" ").toLowerCase();
+
+                    if (!haystack.includes(q)) return false;
+                }
+
+                return true;
+            });
+        }
+
+        function setSeasonFilter(seasonId) {
+            state.seasonFilter = seasonId;
+            document.querySelectorAll(".season-tab").forEach(tab => {
+                tab.classList.toggle("tab-active", tab.dataset.season === seasonId);
+            });
+            renderBooks();
+        }
+
+        function setReadFilter(filterType) {
+            state.readFilter = filterType;
+            document.querySelectorAll(".read-filter-btn").forEach(btn => {
+                btn.classList.toggle("tab-active", btn.dataset.readFilter === filterType);
+            });
+            renderBooks();
+        }
+
+        function clearSearch() {
+            const input = document.getElementById("search-input");
+            input.value = "";
+            state.searchQuery = "";
+            document.getElementById("clear-search-btn").classList.add("hidden");
+            renderBooks();
+        }
+
+        function resetAllFilters() {
+            clearSearch();
+            setSeasonFilter("all");
+            setReadFilter("all");
+        }
+
+        function toggleSpoilerMode() {
+            state.spoilerMode = !state.spoilerMode;
+            state.revealedBooks.clear();
+
+            const btn = document.getElementById("spoiler-toggle-btn");
+            const label = document.getElementById("spoiler-label");
+            const icon = document.getElementById("spoiler-icon");
+
+            if (state.spoilerMode) {
+                btn.classList.add("tab-active");
+                label.textContent = "Spoiler-Schutz: Ein";
+                icon.textContent = "🛡️";
+                showToast("Spoiler-Schutz aktiviert: Zusammenfassungen sind verdeckt.");
+            } else {
+                btn.classList.remove("tab-active");
+                label.textContent = "Spoiler-Schutz: Aus";
+                icon.textContent = "👁️";
+                showToast("Spoiler-Schutz deaktiviert.");
+            }
+
+            renderBooks();
+        }
+
+        function revealCardSpoiler(event, bookId) {
+            event.stopPropagation();
+            state.revealedBooks.add(bookId);
+            renderBooks();
+        }
+
+        /* --------------------------------------------------------------------------
+           5. LESE-FORTSCHRITTSTRACKER
+           -------------------------------------------------------------------------- */
+        function toggleReadStatus(event, bookId) {
+            if (event) event.stopPropagation();
+
+            if (state.readBooks.has(bookId)) {
+                state.readBooks.delete(bookId);
+            } else {
+                state.readBooks.add(bookId);
+            }
+
+            saveReadState();
+            updateProgressUI();
+            renderBooks();
+
+            if (state.activeModalBookId === bookId) {
+                updateModalReadButton(bookId);
+            }
+        }
+
+        function updateProgressUI() {
+            const total = booksDatabase.length;
+            const read = state.readBooks.size;
+            const percent = Math.round((read / total) * 100);
+
+            document.getElementById("read-count").textContent = read;
+            document.getElementById("total-count").textContent = total;
+            document.getElementById("progress-percent").textContent = percent + "%";
+            document.getElementById("progress-bar").style.width = percent + "%";
+        }
+
+        function resetProgress() {
+            if (state.readBooks.size === 0) return;
+            state.readBooks.clear();
+            saveReadState();
+            updateProgressUI();
+            renderBooks();
+            showToast("Lesefortschritt wurde zurückgesetzt.");
+        }
+
+        /* --------------------------------------------------------------------------
+           6. BÜCHER-KARTEN RENDERN
+           -------------------------------------------------------------------------- */
+        function renderBooks() {
+            const grid = document.getElementById("books-grid");
+            const emptyState = document.getElementById("empty-state");
+            const resultsCounter = document.getElementById("results-counter");
+
+            const filtered = getFilteredBooks();
+            resultsCounter.textContent = `Zeige ${filtered.length} von ${booksDatabase.length} Büchern`;
+
+            if (filtered.length === 0) {
+                grid.innerHTML = "";
+                emptyState.classList.remove("hidden");
+                return;
+            }
+
+            emptyState.classList.add("hidden");
+
+            grid.innerHTML = filtered.map(book => {
+                const isRead = state.readBooks.has(book.id);
+                const isBlurred = state.spoilerMode && !state.revealedBooks.has(book.id);
+
+                // Kurze Staffelbezeichnung für das Badge
+                const shortSeason = book.seasonId === "special"
+                    ? "★ Special Adventure"
+                    : book.seasonName.split(":")[0];
+
+                const characterTags = book.characters.slice(0, 4).map(c =>
+                    `<span class="px-2 py-0.5 rounded-md text-[11px] bg-white/5 border border-white/10 text-slate-300">${c}</span>`
+                ).join("");
+
+                return `
+                <article onclick="openBookModal('${book.id}')"
+                    class="book-card glass-panel rounded-3xl p-6 flex flex-col justify-between cursor-pointer relative group">
+                    
+                    <div>
+                        <!-- Obere Metadaten-Zeile -->
+                        <div class="flex items-center justify-between gap-2 mb-3">
+                            <div class="flex items-center gap-1.5 flex-wrap">
+                                <span class="text-[11px] font-semibold px-2.5 py-1 rounded-full bg-white/10 text-white">
+                                    ${shortSeason}
+                                </span>
+                                <span class="text-[11px] font-medium px-2.5 py-1 rounded-full bg-white/5 text-slate-400">
+                                    ${book.volume}
+                                </span>
+                            </div>
+
+                            <!-- Gelesen-Button -->
+                            <button type="button" onclick="toggleReadStatus(event, '${book.id}')"
+                                title="${isRead ? 'Als ungelesen markieren' : 'Als gelesen markieren'}"
+                                class="px-2.5 py-1 rounded-xl text-xs font-semibold border transition-all flex items-center gap-1 shrink-0 cursor-pointer ${
+                                    isRead
+                                        ? 'bg-emerald-500/20 border-emerald-400/50 text-emerald-300'
+                                        : 'bg-white/5 border-white/10 text-slate-400 hover:text-white hover:border-white/30'
+                                }">
+                                <span>${isRead ? '✓ Gelesen' : '○ Ungelesen'}</span>
+                            </button>
+                        </div>
+
+                        <!-- Buchtitel -->
+                        <h3 class="font-mystic text-xl font-bold text-white group-hover:text-amber-200 transition-colors">
+                            ${book.title}
+                        </h3>
+                        <p class="text-[11px] text-slate-400 mt-0.5">${book.seasonName}</p>
+
+                        <!-- Hauptfiguren -->
+                        <div class="flex flex-wrap gap-1.5 mt-3">
+                            ${characterTags}
+                        </div>
+
+                        <!-- Zusammenfassung (6-8 Sätze, ggf. mit Spoiler-Schutz) -->
+                        <div class="mt-4 relative">
+                            <p class="text-xs sm:text-sm text-slate-300 leading-relaxed ${isBlurred ? 'spoiler-blurred' : 'spoiler-revealed'}">
+                                ${book.summary}
+                            </p>
+                            ${isBlurred ? `
+                                <div class="absolute inset-0 flex items-center justify-center">
+                                    <button type="button" onclick="revealCardSpoiler(event, '${book.id}')"
+                                        class="px-4 py-2 rounded-xl bg-black/85 hover:bg-black border border-white/20 text-xs font-semibold text-white shadow-xl cursor-pointer">
+                                        👁️ Zusammenfassung aufdecken
+                                    </button>
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+
+                    <!-- Fußzeile der Karte -->
+                    <div class="mt-5 pt-3.5 border-t border-white/10 flex items-center justify-between text-xs">
+                        <span class="text-slate-500">${book.releaseOrder}</span>
+                        <span class="clan-gradient-text font-semibold group-hover:translate-x-1 transition-transform">
+                            Vollansicht →
+                        </span>
+                    </div>
+                </article>
+                `;
+            }).join("");
+        }
+
+        /* --------------------------------------------------------------------------
+           7. DETAIL-MODAL LOGIK
+           -------------------------------------------------------------------------- */
+        const bookModal = document.getElementById("book-modal");
+
+        function openBookModal(bookId) {
+            const book = booksDatabase.find(b => b.id === bookId);
+            if (!book) return;
+
+            state.activeModalBookId = bookId;
+
+            document.getElementById("modal-season-badge").textContent = book.seasonName;
+            document.getElementById("modal-volume-badge").textContent = book.volume;
+            document.getElementById("modal-release-badge").textContent = book.releaseOrder;
+            document.getElementById("modal-title").textContent = book.title;
+
+            const charsContainer = document.getElementById("modal-characters");
+            charsContainer.innerHTML = book.characters.map(c =>
+                `<span class="px-3 py-1 rounded-xl text-xs font-medium bg-white/5 border border-white/10 text-slate-200">${c}</span>`
+            ).join("");
+
+            const summaryEl = document.getElementById("modal-summary");
+            const revealBtn = document.getElementById("modal-reveal-btn");
+            summaryEl.textContent = book.summary;
+
+            const isBlurred = state.spoilerMode && !state.revealedBooks.has(bookId);
+            if (isBlurred) {
+                summaryEl.classList.add("spoiler-blurred");
+                summaryEl.classList.remove("spoiler-revealed");
+                revealBtn.classList.remove("hidden");
+            } else {
+                summaryEl.classList.remove("spoiler-blurred");
+                summaryEl.classList.add("spoiler-revealed");
+                revealBtn.classList.add("hidden");
+            }
+
+            updateModalReadButton(bookId);
+
+            // Vor/Zurück-Buttons innerhalb der aktuellen Filterliste
+            const list = getFilteredBooks();
+            const idx = list.findIndex(b => b.id === bookId);
+            document.getElementById("modal-prev-btn").disabled = idx <= 0;
+            document.getElementById("modal-next-btn").disabled = idx === -1 || idx >= list.length - 1;
+
+            bookModal.classList.remove("hidden");
+            bookModal.classList.add("flex");
+        }
+
+        function revealModalSpoiler() {
+            if (!state.activeModalBookId) return;
+            state.revealedBooks.add(state.activeModalBookId);
+            const summaryEl = document.getElementById("modal-summary");
+            summaryEl.classList.remove("spoiler-blurred");
+            summaryEl.classList.add("spoiler-revealed");
+            document.getElementById("modal-reveal-btn").classList.add("hidden");
+            renderBooks();
+        }
+
+        function updateModalReadButton(bookId) {
+            const btn = document.getElementById("modal-read-toggle");
+            const isRead = state.readBooks.has(bookId);
+            if (isRead) {
+                btn.className = "w-full sm:w-auto px-5 py-2.5 rounded-xl text-sm font-semibold bg-emerald-500/20 border border-emerald-400/50 text-emerald-300 transition-all flex items-center justify-center gap-2 cursor-pointer";
+                btn.textContent = "✓ Als gelesen markiert";
+            } else {
+                btn.className = "w-full sm:w-auto px-5 py-2.5 rounded-xl text-sm font-semibold clan-btn-primary border border-transparent transition-all flex items-center justify-center gap-2 cursor-pointer";
+                btn.textContent = "Als gelesen markieren";
+            }
+        }
+
+        function toggleCurrentModalRead() {
+            if (!state.activeModalBookId) return;
+            toggleReadStatus(null, state.activeModalBookId);
+        }
+
+        function navigateModal(direction) {
+            if (!state.activeModalBookId) return;
+            const list = getFilteredBooks();
+            const idx = list.findIndex(b => b.id === state.activeModalBookId);
+            const nextIdx = idx + direction;
+            if (nextIdx >= 0 && nextIdx < list.length) {
+                openBookModal(list[nextIdx].id);
+            }
+        }
+
+        function closeBookModal() {
+            state.activeModalBookId = null;
+            bookModal.classList.add("hidden");
+            bookModal.classList.remove("flex");
+        }
+
+        bookModal.addEventListener("click", (e) => {
+            if (e.target === bookModal) closeBookModal();
+        });
+
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape") closeBookModal();
+            if (state.activeModalBookId && e.key === "ArrowRight") navigateModal(1);
+            if (state.activeModalBookId && e.key === "ArrowLeft") navigateModal(-1);
+        });
+
+        /* --------------------------------------------------------------------------
+           8. TOAST-BENACHRICHTIGUNG & INDEX.HTML EXPORT
+           -------------------------------------------------------------------------- */
+        let toastTimer;
+        function showToast(msg) {
+            const toast = document.getElementById("toast");
+            document.getElementById("toast-text").textContent = msg;
+            toast.classList.remove("translate-y-24", "opacity-0");
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => {
+                toast.classList.add("translate-y-24", "opacity-0");
+            }, 3400);
+        }
+
+        function downloadArchiveHtml() {
+            try {
+                const clone = document.documentElement.cloneNode(true);
+
+                // Laufzeit-Overlays sauber ausblenden
+                const clonedToast = clone.querySelector("#toast");
+                if (clonedToast) clonedToast.classList.add("translate-y-24", "opacity-0");
+
+                const clonedModal = clone.querySelector("#book-modal");
+                if (clonedModal) {
+                    clonedModal.classList.add("hidden");
+                    clonedModal.classList.remove("flex");
+                }
+
+                // Dynamisch gerendertes Grid leeren, damit es beim Öffnen der heruntergeladenen Datei frisch initialisiert wird
+                const clonedGrid = clone.querySelector("#books-grid");
+                if (clonedGrid) clonedGrid.innerHTML = "";
+
+                const fullHtml = "<!DOCTYPE html>\n" + clone.outerHTML;
+                const blob = new Blob([fullHtml], { type: "text/html;charset=utf-8" });
+                const url = URL.createObjectURL(blob);
+
+                const link = document.createElement("a");
+                link.href = url;
+                link.download = "index.html";
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+
+                showToast("index.html erfolgreich heruntergeladen! Bereit für Netlify Drop.");
+            } catch (err) {
+                console.error("Download fehlgeschlagen:", err);
+                showToast("Fehler beim Download – bitte Quellcode direkt kopieren.");
+            }
+        }
+
+        /* --------------------------------------------------------------------------
+           9. STERNENCLAN-HINTERGRUNDANIMATION (Responsive Canvas)
+           -------------------------------------------------------------------------- */
+        function initStarClanCanvas() {
+            const canvas = document.getElementById("starclan-canvas");
+            const ctx = canvas.getContext("2d");
+            let stars = [];
+
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+                const count = Math.min(95, Math.floor((canvas.width * canvas.height) / 16000));
+                stars = Array.from({ length: count }, () => ({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    radius: Math.random() * 1.6 + 0.4,
+                    alpha: Math.random() * 0.7 + 0.15,
+                    speedY: -(Math.random() * 0.18 + 0.04),
+                    twinkle: Math.random() * 0.02 + 0.005
+                }));
+            }
+
+            function animateStars() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                for (const s of stars) {
+                    s.y += s.speedY;
+                    s.alpha += s.twinkle;
+                    if (s.alpha > 0.85 || s.alpha < 0.15) s.twinkle *= -1;
+                    if (s.y < -5) {
+                        s.y = canvas.height + 5;
+                        s.x = Math.random() * canvas.width;
+                    }
+
+                    ctx.beginPath();
+                    ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(226, 232, 240, ${s.alpha})`;
+                    ctx.fill();
+                }
+
+                requestAnimationFrame(animateStars);
+            }
+
+            window.addEventListener("resize", resizeCanvas);
+            resizeCanvas();
+            animateStars();
+        }
+
+        /* --------------------------------------------------------------------------
+           10. INITIALISIERUNG BEIM LADEN DER SEITE
+           -------------------------------------------------------------------------- */
+        window.addEventListener("DOMContentLoaded", () => {
+            loadSavedState();
+            updateProgressUI();
+            renderBooks();
+            initStarClanCanvas();
+
+            const searchInput = document.getElementById("search-input");
+            const clearBtn = document.getElementById("clear-search-btn");
+
+            searchInput.addEventListener("input", (e) => {
+                state.searchQuery = e.target.value;
+                clearBtn.classList.toggle("hidden", state.searchQuery.length === 0);
+                renderBooks();
+            });
+        });
+    </script>
+</body>
+</html>
